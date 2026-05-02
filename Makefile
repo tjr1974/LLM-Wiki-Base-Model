@@ -8,7 +8,7 @@ Q ?=
 # Absolute path to a child fork checkout for subsystem diffing.
 CHILD ?=
 
-.PHONY: help wiki-compile wiki-validate wiki-lint wiki-text wiki-analyze wiki-query wiki-queue-health wiki-hub wiki-discovery wiki-discovery-rebuild wiki-coverage wiki-sync-nav wiki-sync-nav-all wiki-fix-citations-dry wiki-fix-citations wiki-admissibility-smoke wiki-a11y wiki-perf wiki-wiki-rel wiki-release-manifest wiki-quality-gate wiki-static-export-check fork-delta fork-delta-scan fork-delta-shortlist fork-delta-remediation fork-delta-portability-audit fork-delta-next-batch fork-delta-backlog fork-delta-status fork-delta-verify fork-delta-full _wiki-md-core-gates wiki-check wiki-ci wiki-all
+.PHONY: help wiki-compile wiki-validate wiki-lint wiki-text wiki-analyze wiki-query wiki-queue-health wiki-hub wiki-discovery wiki-discovery-rebuild wiki-coverage wiki-sync-nav wiki-sync-nav-all wiki-fix-citations-dry wiki-fix-citations wiki-admissibility-smoke wiki-a11y wiki-perf wiki-wiki-rel wiki-release-manifest wiki-quality-gate wiki-static-export-check fork-delta fork-delta-scan fork-delta-shortlist fork-delta-remediation fork-delta-portability-audit fork-delta-next-batch fork-delta-backlog fork-delta-status fork-delta-verify fork-delta-full _wiki-md-core-gates wiki-check wiki-ci wiki-all wiki-restore-runtime
 
 help:
 	@echo "make wiki-compile   # wiki_compiler.py + dedupe_runtime.py"
@@ -47,6 +47,7 @@ help:
 	@echo "make fork-delta-verify  # verify runtime artifact consistency"
 	@echo "make fork-delta-full CHILD='/abs/path/to/child' # run report+scan+shortlist+remediation+summary"
 	@echo "make wiki-all       # pytest + wiki-ci + wiki-quality-gate (inherits VALIDATE_WIKI_ARGS for wiki-ci)"
+	@echo "make wiki-restore-runtime  # git checkout -- ai/runtime/ (drop timestamp-only test/gate churn)"
 
 fork-delta:
 	@test -n "$(CHILD)" || { echo >&2 "fork-delta: set CHILD='/absolute/path/to/child'"; exit 2; }
@@ -213,3 +214,6 @@ wiki-ci: wiki-compile
 
 wiki-all:
 	pytest -q && $(MAKE) wiki-ci && $(MAKE) wiki-quality-gate
+
+wiki-restore-runtime:
+	git checkout -- ai/runtime/

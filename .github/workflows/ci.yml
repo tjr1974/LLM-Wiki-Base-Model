@@ -30,9 +30,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Mirrors the **`pytest`** half of **`make wiki-all`** (wiki-ci + wiki-quality-gate follow in the next step).
-      - name: Run pytest
-        run: pytest -q
+      # Same as **`make wiki-all`** up through **`pytest`**, then **`make wiki-restore-runtime`** so CI exercises that shortcut too.
+      - name: Run unit tests (make wiki-test)
+        run: make wiki-test
 
       # Forks may export VALIDATE_WIKI_ARGS=--strict-citation-meta before make wiki-ci / autopilot.py for tighter citation scaffolding.
       # Forks with a compiled human/site/ export may additionally run: make wiki-static-export-check (requires human/site/meta.json).

@@ -11,6 +11,7 @@ OUT = ROOT / "ai" / "runtime" / "human_text_lint.ndjson"
 
 MD_GLOBS = [
     "README.md",
+    "SECURITY.md",
     "schema/**/*.md",
     "wiki/entities/**/*.md",
     "wiki/events/**/*.md",

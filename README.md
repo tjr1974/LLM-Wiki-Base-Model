@@ -4,7 +4,7 @@ Primary system is machine-oriented. Human-readable wiki is a late-stage projecti
 
 This repository is intentionally domain-neutral. Any placeholder examples are illustrative only.
 
-**License.** Original project expression is contributed under **CC0 1.0** (see **`LICENSE`**). Human-facing disclaimers appear in **`wiki/synthesis/disclaimer-and-license.md`**. **`disclaimer_and_license.txt`** repeats the short dedication for packaging or mirrors.
+**License.** Original project expression is contributed under **CC0 1.0** (see **`LICENSE`**). Human-facing disclaimers appear in **`wiki/synthesis/disclaimer-and-license.md`**. **`disclaimer_and_license.txt`** repeats the short dedication for packaging or mirrors. Security reporting is summarized in **`SECURITY.md`**.
 
 **Human-readable wiki.** The Markdown tree stays intentionally light. **`wiki/main.md`** is the navigation hub. **`wiki/entities/example-entity.md`** is the single fully worked pattern for citations and internal links. Contributor orientation sits in **`schema/wiki-quickstart.md`**. **Editorial norms** match the full **`Shaolin Monastery Research System`** handbook in **`schema/editorial-policy.md`** (mission line generalized for forks). Typography and citations follow **`scripts/validate_human_text.py`** and **`schema/citation-spec.md`** like downstream.
 

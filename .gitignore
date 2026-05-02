@@ -68,3 +68,11 @@ node_modules/
 # Drop confidential ingest files under raw/inbox/ without committing (tracked fixtures stay in git)
 raw/inbox/**
 !raw/inbox/queue-fixture.txt
+
+# Merge / patch fallout
+*.orig
+*.rej
+
+# Optional local scratch at repo root only
+/scratch/
+/tmp/

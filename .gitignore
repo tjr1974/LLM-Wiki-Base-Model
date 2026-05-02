@@ -56,3 +56,15 @@ ai/runtime/ingest.ops.ndjson
 
 # --- Local query / rollup outputs (see README: writeback_artifact, coverage matrix paths) ---
 ai/artifacts/
+
+# Post-deploy HTTP smoke (optional; may reference private base URLs — regenerate locally after deploy)
+ai/runtime/deployed_site_smoke.min.json
+
+# --- Optional local junk / editor ---
+.idea/
+*.log
+node_modules/
+
+# Drop confidential ingest files under raw/inbox/ without committing (tracked fixtures stay in git)
+raw/inbox/**
+!raw/inbox/queue-fixture.txt

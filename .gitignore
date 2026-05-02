@@ -1,0 +1,58 @@
+# --- Python & packaging ---
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# --- Secrets & local configuration (never commit) ---
+.env
+.env.*
+!.env.example
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Maintainer private prompts (see schema/protected-paths.md; also listed in .cursorignore)
+dev_prompts.txt
+
+# --- Generated lint logs ---
+logs/
+
+# --- Fork-built static exports (templates live in-repo; baked HTML is local) ---
+human/site/
+
+# --- Machine-local automation (embed absolute repo/interpreter paths in JSON) ---
+ai/runtime/autopilot.status.json
+ai/runtime/daemon.heartbeat.json
+
+# Fork comparison tooling output (embeds absolute parent_root / child_root from make fork-delta CHILD='...')
+ai/runtime/fork_delta_*.min.json
+ai/runtime/fork_delta_*.md
+ai/runtime/fork-delta*.json
+
+# --- Autopilot runtime streams ---
+ai/runtime/.autopilot.runtime.lock
+ai/runtime/autopilot.ops.ndjson
+
+# Ingest operation log (append-only; embeds absolute paths and subprocess argv)
+ai/runtime/ingest.ops.ndjson
+
+# --- Local query / rollup outputs (see README: writeback_artifact, coverage matrix paths) ---
+ai/artifacts/

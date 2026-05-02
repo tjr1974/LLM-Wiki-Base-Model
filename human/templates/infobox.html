@@ -1,0 +1,12 @@
+<aside class="infobox" aria-label="{{ infobox.aria_label | default('Infobox') }}">
+  <h2 class="infobox-title">{{ infobox.title }}</h2>
+  {% if infobox.image_url %}
+  <img class="infobox-image" src="{{ infobox.image_url }}" alt="{{ infobox.image_alt | default(infobox.title) }}">
+  {% endif %}
+  <dl class="infobox-grid">
+    {% for row in infobox.rows %}
+    <dt>{{ row.label }}</dt>
+    <dd>{{ row.value | safe }}</dd>
+    {% endfor %}
+  </dl>
+</aside>

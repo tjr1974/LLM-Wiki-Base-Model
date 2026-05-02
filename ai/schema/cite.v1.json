@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "cite": {
+    "id": "sid:cid",
+    "req": ["sid", "cid", "cf", "lg"],
+    "cf": {"h": "high", "m": "medium", "l": "low"}
+  },
+  "policy": {
+    "block_on_missing": true,
+    "block_on_unresolvable": true,
+    "block_on_missing_cf": true,
+    "block_on_translated_without_src_lang": true
+  }
+}

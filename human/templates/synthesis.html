@@ -1,0 +1,5 @@
+<section class="page page-synthesis">
+  <h1>{{ synthesis.title | default(title | default("Synthesis")) }}</h1>
+  <section class="thesis">{{ thesis | safe }}</section>
+  <section class="analysis">{{ analysis | safe }}</section>
+</section>

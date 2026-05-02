@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "thresholds": {
+    "min_non_source_pages": 1,
+    "min_total_citations": 1,
+    "min_avg_citations": 0.1,
+    "min_pages_with_citations": 1,
+    "min_disputes_pages": 0,
+    "max_stub_share": 0.51,
+    "max_uncited_claim_bullets": 500,
+    "min_narrative_pages": 0,
+    "min_narrative_avg_words": 0
+  },
+  "required_page_quality": {},
+  "note": "Ultra-permissive defaults for the thin domain-neutral scaffold. validate_human_readiness.py only walks wiki/entities, events, themes, periods, chronology, synthesis, and disputes. It skips wiki/sources and omits wiki/main.md and other files directly under wiki/. Forks widen paths or thresholds as needed."
+}

@@ -1,0 +1,10 @@
+You are linting the wiki for trust issues.
+
+Check:
+- Claims missing [[sources/...#...]]
+- Broken wiki links
+- Contradictions between pages (same fact, different claims)
+- Orphan pages (no inbound links from index or hub pages)
+- Stale claims where logs show newer sources ingested after page update
+
+Output a markdown report with severity: error | warning | info.

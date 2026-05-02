@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "hard_block_no_override": [
+    "disambiguation",
+    "special:prefixindex",
+    "/wiki/list_of_",
+    "/wiki/template:",
+    "/wiki/category:"
+  ],
+  "block_if_contains": [
+    "_film_",
+    "(film)",
+    "_episode_",
+    "soundtrack"
+  ],
+  "allow_if_contains": []
+}

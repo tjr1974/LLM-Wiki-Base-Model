@@ -1,0 +1,17 @@
+<section class="page page-index">
+  <div class="wiki-body markdown-content">
+  <h1 id="wiki-home-heading"><button class="toc-trigger" type="button" aria-expanded="false" aria-controls="wiki-inline-toc" title="Toggle the table of contents">☰</button> Wiki Base Model</h1>
+  <span id="wiki-inline-toc-anchor"></span>
+  <nav id="wiki-inline-toc" class="wiki-toc is-collapsed" aria-label="Contents"><div class="wiki-toc-head"><span class="wiki-toc-title">Contents</span><button class="wiki-toc-hide" type="button">hide</button><button class="wiki-toc-move" type="button">move to sidebar</button></div><ol class="wiki-toc-list"></ol></nav>
+  <p class="home-lede">Fork this scaffold for domain-specific exports. Canonical wiki paths live under <code>wiki/</code> (see <code>wiki/main.md</code>). Runtime indexes live under <code>ai/</code> and <code>normalized/</code>.</p>
+  <h2 id="minimal-markdown-shell">Minimal markdown shell</h2>
+  <p>The layout matches the shared human-site export shell (header drawer, floating table-of-contents toggle, sidebar rail, footer disclosure link) with neutral placeholders.</p>
+  <h2 id="guided-next-steps">Guided next steps</h2>
+  <ul>
+    <li>Read <code>schema/editorial-policy.md</code>, <code>schema/citation-spec.md</code>, <code>schema/wiki-quickstart.md</code>.</li>
+    <li>Reuse the example entity page (<code>wiki/entities/example-entity.md</code>) as your citation shape reference.</li>
+    <li>Customize <code>site_title</code> and navigation route defaults where your exporter injects shell variables.</li>
+  </ul>
+  <section class="cards">{{ cards | safe }}</section>
+  </div>
+</section>

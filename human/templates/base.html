@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="{{ html_lang | default('en') }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <title>{{ title | default("Wiki Base Model") }}</title>{{ (extra_head | default("")) | safe }}
+  <link rel="icon" href="{{ favicon_href | default('/assets/favicon.ico') }}?v={{ asset_version | default('1') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ css_theme_href | default('/assets/css/theme-dark.css') }}?v={{ asset_version | default('1') }}">
+  <link rel="stylesheet" href="{{ css_content_href | default('/assets/css/content.css') }}?v={{ asset_version | default('1') }}">
+</head>
+<body class="theme-dark">
+  <a class="skip-link" href="#wiki-primary-content">Skip to main content</a>
+  <header class="site-header">
+    <button class="header-nav-toggle" type="button" aria-label="Toggle main menu" title="Toggle main menu" aria-expanded="false" aria-controls="global-nav-rail">☰</button>
+    <a class="brand" href="{{ header_home_href | default('/') }}">{{ site_title | default("Wiki Base Model") }}</a>
+    <form class="header-search" action="{{ header_search_href | default('/search/') }}" method="get" role="search">
+      <input type="search" name="q" placeholder="Search" aria-label="Search">
+    </form>
+  </header>
+
+  <aside id="global-nav-rail" class="global-nav-rail" aria-label="Main menu">
+    <nav class="global-nav-links">
+      <a href="{{ header_home_href | default('/') }}">Main Page</a>
+      <a href="{{ header_contents_href | default('/') }}">Contents</a>
+      <a href="{{ header_topics_href | default('/themes/') }}">Topics</a>
+      <a href="{{ header_feature_article_href | default('/') }}">Example article</a>
+      <a href="{{ header_about_href | default('/synthesis/disclaimer-and-license/') }}">About</a>
+      <a href="{{ header_search_nav_href | default('/search/') }}">Search</a>
+    </nav>
+  </aside>
+
+  <main class="layout-grid" aria-label="Page body">
+    <aside id="toc-left-rail" class="toc-left-rail" aria-label="Table of contents sidebar"></aside>
+    <article id="wiki-primary-content" class="content" tabindex="-1">{{ content | safe }}</article>
+    <aside class="sidebar-right">{{ sidebar_right | safe }}</aside>
+  </main>
+  <footer class="site-footer" aria-label="Site and page metadata">
+    <nav class="site-footer-nav" aria-label="Legal">
+      <a href="/synthesis/disclaimer-and-license/">Disclaimer and license</a>
+    </nav>
+    <p class="page-last-edited">This page was last edited on <time id="page-last-edited-time" datetime=""></time>.</p>
+  </footer>
+  <button class="toc-floating-toggle" type="button" aria-expanded="false" aria-controls="wiki-inline-toc" title="Toggle the table of contents" aria-label="Toggle the table of contents"><span class="toc-toggle-icon" aria-hidden="true">≡</span><span class="visually-hidden">Toggle the table of contents</span></button>
+
+  <script src="{{ search_index_js_href | default('/assets/search-index.js') }}?v={{ asset_version | default('1') }}"></script>
+  <script src="{{ app_js_href | default('/assets/js/app.js') }}?v={{ asset_version | default('1') }}"></script>
+</body>
+</html>

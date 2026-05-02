@@ -1,0 +1,5 @@
+<section class="page page-source">
+  <h1>{{ source.title | default(title | default("Source")) }}</h1>
+  <div class="meta">sid: {{ source.sid }} | language: {{ source.lang_primary }}</div>
+  <section class="anchors">{{ anchors | safe }}</section>
+</section>

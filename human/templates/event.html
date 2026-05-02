@@ -1,0 +1,5 @@
+<section class="page page-event">
+  <h1>{{ event.title | default(title | default("Event")) }}</h1>
+  <div class="meta">date: {{ event.date }} | confidence: {{ event.confidence }}</div>
+  <section class="body">{{ body | safe }}</section>
+</section>

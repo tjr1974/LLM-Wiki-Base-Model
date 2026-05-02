@@ -1,0 +1,5 @@
+{
+  "v": 1,
+  "waived_urls": [],
+  "note": "Add objects { \"url\": \"https://...\", \"reason\": \"...\" } when HEAD/GET rejects a citation URL you still intend to cite. Fork overrides only."
+}

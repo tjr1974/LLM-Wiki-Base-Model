@@ -1,0 +1,2 @@
+示例实体 位于 示例地区。
+Example entity is in an example region (sample fixture text).

@@ -1,0 +1,8 @@
+Original material in this repository is dedicated to the public domain under CC0 1.0
+Universal unless noted otherwise.
+
+Full legal instrument: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+Reader-facing disclaimers and the same dedication in narrative form appear in:
+
+  wiki/synthesis/disclaimer-and-license.md

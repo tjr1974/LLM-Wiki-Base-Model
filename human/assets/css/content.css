@@ -1,0 +1,1048 @@
+:where(.content) :where(h2, h3, h4) {
+  margin: 1.3em 0 0.45em 0;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-1);
+}
+
+:where(.content) h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.2em;
+}
+
+:where(.content) h3 {
+  font-size: 1.2rem;
+}
+
+:where(.content) :where(ul, ol) {
+  margin: 0.45em 0 0.8em 0;
+  padding-left: 1.4em;
+}
+
+:where(.content) p {
+  margin: 0.5em 0 0.95em 0;
+  line-height: var(--line-height-1);
+}
+
+:where(.content) code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-1);
+  background: color-mix(in oklab, var(--bg-2) 80%, black 20%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  padding: var(--space-1);
+  margin: 0;
+}
+
+/* Keep code-style links in lists readable without boxed pills */
+:where(.content) li code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+  line-height: var(--line-height-1);
+}
+
+:where(.content) pre {
+  overflow: auto;
+  background: color-mix(in oklab, var(--bg-2) 85%, black 15%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  padding: var(--space-2);
+  margin: 0;
+  line-height: var(--line-height-1);
+}
+
+:where(.content) table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-2) 0;
+  font-size: var(--font-size-2);
+}
+
+:where(.content) :where(th, td) {
+  border: 1px solid var(--border);
+  padding: var(--space-1);
+  margin: 0;
+  text-align: left;
+  line-height: var(--line-height-1);
+}
+
+:where(.content) blockquote {
+  margin: 0;
+  padding: var(--space-1);
+  color: var(--accent-highlight);
+  line-height: var(--line-height-1);
+}
+
+:where(.wiki-body) :where(p, li) {
+  line-height: var(--line-height-1);
+}
+
+:where(.wiki-link) {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+:where(.wiki-link-broken) {
+  color: color-mix(in oklab, var(--fg-1) 70%, var(--accent));
+  opacity: 0.85;
+}
+
+:where(.wiki-external) {
+  color: var(--fg-0);
+}
+
+:where(.reference) {
+  font-size: var(--font-size-2);
+  vertical-align: baseline;
+  line-height: var(--line-height-1);
+  margin-left: 1px;
+}
+
+:where(.reference a) {
+  text-decoration: none;
+  color: var(--accent);
+}
+
+:where(.wiki-references) {
+  margin-top: 1.75em;
+  padding-top: 0.4em;
+  border-top: 1px solid var(--border);
+}
+
+:where(.wiki-references) h2 {
+  margin-bottom: var(--space-2);
+}
+
+:where(.wiki-references) ol {
+  margin: 0;
+  padding-left: 1.5em;
+  column-count: 2;
+  column-gap: 2.2em;
+}
+
+:where(.wiki-references) li {
+  margin-bottom: 0.35em;
+  line-height: var(--line-height-1);
+  break-inside: avoid;
+}
+
+:where(.ref-backlink) {
+  margin-left: var(--space-1);
+  font-size: var(--font-size-2);
+}
+
+:where(.wiki-works-cited-intro) {
+  margin: 0.5em 0 0.85em;
+  font-size: 0.92rem;
+  max-width: 48em;
+  color: color-mix(in oklab, var(--fg-main) 86%, gray);
+}
+
+:where(.wiki-toc) {
+  --toc-toggle-size: 1.25rem;
+  margin: 0.45em 0 1em 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  background: color-mix(in oklab, var(--bg-elev-1) 90%, black 10%);
+  width: max-content;
+  min-width: 200px;
+  max-width: min(51em, 75vw);
+  font-size: 0.84rem;
+  line-height: var(--line-height-1);
+  box-shadow: var(--shadow-overlay-toc);
+}
+
+/* TOC control + title sit in same h1 without HTML whitespace — flex gap separates them (no :has for older UA). */
+.wiki-body.markdown-content > h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.wiki-body.markdown-content > h1 > .toc-trigger {
+  flex-shrink: 0;
+  margin-inline-end: var(--space-0);
+}
+
+:where(.toc-trigger) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--fg-1);
+  margin-right: 0.4em;
+  padding: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+:where(.toc-trigger:hover),
+:where(.toc-floating-toggle:hover) {
+  background: color-mix(in oklab, var(--bg-elev-2) 78%, white 22%);
+}
+
+:where(.toc-trigger.is-quiet),
+:where(.toc-floating-toggle.is-quiet) {
+  color: var(--fg-muted);
+  border-color: transparent;
+  background: transparent;
+}
+
+:where(.toc-trigger:not(.is-quiet)),
+:where(.toc-floating-toggle:not(.is-quiet)) {
+  border-color: color-mix(in oklab, var(--border) 72%, white 28%);
+  background: color-mix(in oklab, var(--bg-elev-2) 88%, white 12%);
+  box-shadow: var(--shadow-toggle);
+}
+
+:where(.toc-floating-toggle) {
+  position: fixed;
+  left: calc(var(--space-2) + var(--space-1));
+  top: 3.6rem;
+  z-index: 46;
+  border: 1px solid transparent;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: var(--fg-muted);
+  padding: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1rem;
+  line-height: var(--line-height-1);
+  display: none;
+}
+
+:where(.toc-trigger),
+:where(.header-nav-toggle),
+:where(.toc-floating-toggle) {
+  position: relative;
+  z-index: 2;
+}
+
+:where(.toc-trigger.is-sticky) {
+  position: fixed;
+  top: 3.6rem;
+  left: 0.75rem;
+  z-index: 70;
+}
+
+:where(.toc-toggle-icon) {
+  font-size: 0.95rem;
+  line-height: var(--line-height-1);
+  font-weight: 600;
+}
+
+:where(.wiki-toc.is-collapsed) {
+  display: none;
+}
+
+:where(.wiki-toc.is-overlay) {
+  position: fixed;
+  top: 3.55rem;
+  left: 0.75rem;
+  z-index: 60;
+  max-height: 72vh;
+  overflow: auto;
+}
+
+:where(.wiki-toc.is-sidebar) {
+  float: none;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  max-width: none;
+  position: static;
+  overflow: auto;
+}
+
+:where(.wiki-toc-head) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.2em;
+  padding: 0.26em 0.45em;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 82%, white 18%);
+}
+
+:where(.wiki-toc-title) {
+  margin: 0;
+  margin-right: auto;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--fg-0);
+  text-transform: none;
+}
+
+/* Class on `button` so these win over generic `button` rules in theme CSS. */
+button.wiki-toc-hide,
+button.wiki-toc-move {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  padding-block: 0.1em;
+  padding-inline: 0.35em;
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: inherit;
+  line-height: 1.15;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+:where(.toc-subtoggle) {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  padding: 0;
+  font-size: 0.74rem;
+  line-height: var(--line-height-1);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+:where(.wiki-toc-list) {
+  margin: 0;
+  padding: 0.4em 0.65em 0.5em 0.75em;
+  list-style: none;
+  counter-reset: toc-item;
+}
+
+:where(.wiki-toc-list > li) {
+  position: relative;
+  margin: 0.08em 0;
+  padding-left: 1.3em;
+  counter-increment: toc-item;
+}
+
+:where(.wiki-toc-list > li > a) {
+  display: block;
+  color: var(--accent);
+  text-decoration: none;
+  border-radius: var(--radius-1);
+  padding: 0.2em 0.3em;
+}
+
+:where(.wiki-toc-list > li > a:hover) {
+  background: color-mix(in oklab, var(--bg-elev-2) 84%, white 16%);
+  text-decoration: none;
+}
+
+:where(.wiki-toc-list > li > a)::before {
+  content: counter(toc-item) ". ";
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.wiki-toc-list > li > .toc-sublist) {
+  list-style: none;
+  margin: 0.12em 0 0.06em 0;
+  padding-left: 1.15em;
+  counter-reset: toc-subitem;
+}
+
+:where(.wiki-toc-list > li > .toc-sublist > li) {
+  counter-increment: toc-subitem;
+  margin: 0.12em 0;
+}
+
+:where(.wiki-toc-list > li > .toc-sublist > li > a)::before {
+  content: counter(toc-item) "." counter(toc-subitem) " ";
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+:where(.wiki-toc .toc-sub) {
+  margin-left: var(--space-1);
+}
+
+:where(.toc-sublist) {
+  margin-top: 0.2em;
+  margin-left: 0.9em;
+}
+
+:where(.toc-subtoggle) {
+  font-size: 0;
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: var(--toc-toggle-size);
+  height: var(--toc-toggle-size);
+  border-radius: var(--radius-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.toc-subtoggle)::before {
+  content: "▸";
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+  transform: rotate(90deg);
+  transition: transform 120ms ease;
+}
+
+:where(.toc-subtoggle[aria-expanded="false"])::before {
+  transform: rotate(0deg);
+}
+
+:where(.toc-subtoggle:hover) {
+  background: color-mix(in oklab, var(--bg-elev-2) 82%, white 18%);
+}
+
+:where(.wiki-toc-list > li:not(.toc-level-expanded) > .toc-sublist) {
+  display: none;
+}
+
+:where(body.toc-sticky-trigger-visible .toc-floating-toggle) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(body.toc-open .toc-floating-toggle) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.visually-hidden) {
+  position: absolute;
+  clip-path: inset(50%);
+  height: var(--space-1);
+  width: var(--space-1);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+:where(.skip-link:not(:focus-visible)) {
+  position: absolute;
+  clip-path: inset(50%);
+  height: var(--space-1);
+  width: var(--space-1);
+  overflow: hidden;
+}
+
+:where(.skip-link:focus-visible) {
+  position: absolute;
+  left: var(--space-2);
+  top: var(--space-2);
+  margin: 0;
+  clip-path: none;
+  overflow: visible;
+  z-index: 100;
+  height: auto;
+  width: auto;
+  padding: var(--space-2);
+  background-color: var(--bg-2);
+  color: var(--fg-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  outline: 2px solid var(--accent);
+  outline-offset: var(--space-1);
+}
+
+:where(body.theme-dark a:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: var(--space-1);
+}
+
+:where(body.theme-dark button:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: var(--space-1);
+}
+
+:where(body.theme-dark input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: var(--space-1);
+}
+
+:where(.listing) {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-1);
+  max-height: min(70vh, 36rem);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  padding: var(--space-2);
+}
+
+:where(.listing) a {
+  color: var(--accent);
+  line-height: var(--line-height-1);
+}
+
+:where(.page-index) :where(.cards) .listing {
+  max-height: none;
+}
+
+:where(.search-hit-list) {
+  padding-left: var(--space-2);
+  margin: 0;
+}
+
+:where(.search-hit-list) li {
+  margin-bottom: var(--space-1);
+}
+
+:where(.search-hint),
+:where(.search-empty),
+:where(.search-error) {
+  margin: 0;
+  color: var(--fg-1);
+  line-height: var(--line-height-1);
+}
+
+:where(.error-recovery) {
+  margin: 0;
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  color: var(--fg-1);
+  line-height: var(--line-height-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  background: var(--bg-1);
+}
+
+:where(.error-recovery) a {
+  color: var(--accent);
+}
+
+:where(.infobox) {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--bg-elev-2);
+  color: var(--fg-0);
+  line-height: var(--line-height-1);
+  font-size: 0.88rem;
+  font-weight: var(--font-weight-regular);
+  border-collapse: collapse;
+}
+
+:where(.infobox-title) {
+  margin: 0;
+  padding: 0.45em 0.55em;
+  font-size: 1rem;
+  font-weight: var(--font-weight-strong);
+  line-height: var(--line-height-1);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+:where(.infobox-subtitle),
+:where(.infobox-image-caption) {
+  margin: 0;
+  padding: 0.32em 0.55em;
+  font-size: 0.93rem;
+  text-align: center;
+  border-top: 1px solid color-mix(in oklab, var(--border) 75%, black 25%);
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 75%, black 25%);
+  background: color-mix(in oklab, var(--bg-elev-1) 88%, black 12%);
+}
+
+:where(.infobox-image-caption) {
+  font-size: 0.85rem;
+  color: color-mix(in oklab, var(--fg-1) 92%, transparent);
+  border-bottom: none;
+}
+
+/* Primary infobox: lead thumbnail (synced / Wikipedia-style placement) */
+.wiki-body .infobox-stack .infobox-lead-thumb-cell {
+  padding: 0;
+  line-height: 0;
+  text-align: center;
+  vertical-align: top;
+  border-top: 1px solid color-mix(in oklab, var(--border) 75%, black 25%);
+}
+
+.wiki-body .infobox-stack .infobox-lead-thumb-link {
+  display: block;
+}
+
+.wiki-body .infobox-stack .infobox-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  vertical-align: middle;
+  object-fit: contain;
+  background: color-mix(in oklab, var(--bg-elev-1) 92%, black 8%);
+}
+
+.wiki-body :where(.infobox) .infobox-image-attrib {
+  margin: 0;
+  padding: 0.28em 0.52em;
+  font-size: 0.72rem;
+  line-height: var(--line-height-1);
+  text-align: center;
+  border-top: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  color: color-mix(in oklab, var(--fg-1) 88%, transparent);
+  background: color-mix(in oklab, var(--bg-elev-1) 90%, black 10%);
+}
+
+.wiki-body .infobox-stack .infobox-map-cell {
+  padding: 0;
+  border-top: 1px solid color-mix(in oklab, var(--border) 75%, black 25%);
+  vertical-align: top;
+  background: color-mix(in oklab, var(--bg-elev-2) 95%, black 5%);
+}
+
+.wiki-body .infobox-stack .infobox-map-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.52rem;
+  padding: 0.45rem;
+}
+
+.wiki-body .infobox-stack .infobox-map-frame {
+  margin: 0;
+}
+
+.wiki-body .infobox-stack .infobox-map-iframe {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 152px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in oklab, var(--border) 78%, transparent);
+  border-radius: var(--radius-1);
+}
+
+.wiki-body .infobox-stack .infobox-google-map-iframe {
+  height: 220px;
+  min-height: 180px;
+}
+
+.wiki-body .infobox-stack .infobox-map-cap {
+  margin: 0.26rem 0 0;
+  font-size: 0.73rem;
+  line-height: var(--line-height-1);
+  text-align: center;
+  color: color-mix(in oklab, var(--fg-1) 93%, transparent);
+}
+
+.wiki-body :where(.infobox) .infobox-inline-links {
+  display: inline-block;
+  margin-top: 0.28em;
+  font-size: 0.82rem;
+}
+
+.wiki-body :where(.infobox) .infobox-ext {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+:where(.infobox-above) {
+  margin: 0;
+  padding: 0.42em 0.55em;
+  font-size: 0.86rem;
+  font-weight: var(--font-weight-strong);
+  text-align: center;
+  color: color-mix(in oklab, var(--fg-0) 95%, transparent);
+  background: color-mix(in oklab, var(--bg-elev-1) 80%, black 20%);
+  border-top: 1px solid color-mix(in oklab, var(--border) 72%, black 28%);
+}
+
+/* Chinese infobox: Wikipedia-like collapsed-by-default transcription block */
+.infobox-chinese-names .infobox-collapsible-cell {
+  padding: 0;
+  border-top: 1px solid color-mix(in oklab, var(--border) 75%, black 25%);
+}
+
+.infobox-chinese-names .infobox-details {
+  width: 100%;
+}
+
+.infobox-chinese-names .infobox-collapsible-summary {
+  display: list-item;
+  list-style-position: outside;
+  margin-inline-start: 0.85rem;
+  padding: 0.38em 0.55em 0.38em 0.15em;
+  font-size: 0.86rem;
+  font-weight: var(--font-weight-strong);
+  text-align: center;
+  color: color-mix(in oklab, var(--fg-0) 95%, transparent);
+  background: color-mix(in oklab, var(--bg-elev-1) 80%, black 20%);
+  cursor: pointer;
+  user-select: none;
+}
+
+.infobox-chinese-names .infobox-details .infobox-nested tbody > :where(tr:first-child) :where(th, td) {
+  border-top: none;
+}
+
+.infobox-chinese-names .infobox-details[open] > .infobox-collapsible-summary {
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 72%, black 28%);
+}
+
+.infobox-chinese-names .infobox-nested {
+  width: 100%;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background: color-mix(in oklab, var(--bg-elev-2) 96%, black 4%);
+}
+
+:where(.infobox-image) {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: var(--space-0);
+  padding: var(--space-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+}
+
+:where(.infobox-label),
+:where(.infobox-data) {
+  padding: 0.4em 0.55em;
+  line-height: var(--line-height-1);
+  border-top: 1px solid color-mix(in oklab, var(--border) 75%, black 25%);
+  vertical-align: top;
+}
+
+:where(.infobox-label) {
+  color: var(--fg-1);
+  font-weight: var(--font-weight-strong);
+  background: color-mix(in oklab, var(--bg-elev-1) 85%, black 15%);
+  border-right: 1px solid color-mix(in oklab, var(--border) 68%, black 32%);
+  width: 38%;
+}
+
+:where(.infobox-data) {
+  color: var(--fg-0);
+  background: color-mix(in oklab, var(--bg-elev-2) 92%, black 8%);
+}
+
+.wiki-body .infobox-stack {
+  float: right;
+  width: 320px;
+  max-width: 44%;
+  margin: 0 0 1em 1.2em;
+  clear: right;
+}
+
+.wiki-body .infobox-stack .infobox {
+  float: none;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 0.65em;
+}
+
+.wiki-body .infobox-stack .infobox:last-child {
+  margin-bottom: 0;
+}
+
+/* Synced infobox kinds: religious_building + generic person event written-work film org tv stele dynasty martial_art. */
+
+:where(.wiki-body) :where(.infobox) {
+  float: right;
+  width: 320px;
+  max-width: 44%;
+  margin: 0 0 1em 1.2em;
+  clear: right;
+}
+
+:where(.article-meta) {
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+:where(.homepage-quote) {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--accent-highlight);
+  background: var(--bg-0);
+  color: var(--accent-highlight);
+}
+
+:where(.homepage-quote p) {
+  margin: 0;
+  font-style: italic;
+}
+
+:where(.homepage-quote cite) {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--accent-highlight);
+  font-style: normal;
+}
+
+:where(.article-top-strip) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8em;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 62%, black 38%);
+  padding-bottom: 0.24em;
+  margin-bottom: 0.52em;
+}
+
+:where(.article-tools-inline) {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.78rem;
+  color: color-mix(in oklab, var(--fg-muted) 88%, black 12%);
+}
+
+:where(.article-tools-inline a) {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+:where(.article-tools-inline a:hover) {
+  text-decoration: underline;
+}
+
+:where(.tools-label) {
+  color: color-mix(in oklab, var(--fg-1) 78%, black 22%);
+}
+
+:where(.tools-path) {
+  color: color-mix(in oklab, var(--fg-muted) 68%, black 32%);
+  opacity: 0.82;
+  font-size: 0.74rem;
+}
+
+:where(.section-placeholder) {
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+}
+
+:where(.wiki-categories) ul {
+  display: none;
+}
+
+:where(.wiki-categories) {
+  margin-top: 1.2em;
+  border-top: 1px solid color-mix(in oklab, var(--border) 65%, black 35%);
+  padding-top: 0.45em;
+  font-size: 0.84rem;
+}
+
+:where(.cat-label) {
+  color: var(--fg-muted);
+}
+
+:where(.wiki-categories) p {
+  margin: 0;
+}
+
+/* Category index pages — layout inspired by Wikipedia category letter groups */
+.page.page-category .page-category-inner :where(.category-section-heading) {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.35rem 0 0.45rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 55%, black 45%);
+}
+
+.page.page-category .page-category-inner :where(nav.category-related-indexes) :where(.category-section-heading) {
+  margin-top: 0.5rem;
+}
+
+.page.page-category .page-category-inner :where(.category-related-list) {
+  margin: 0.35rem 0 0 1.1rem;
+  padding: 0;
+  list-style: disc;
+  column-width: 12rem;
+  column-gap: 2rem;
+}
+
+.page.page-category .page-category-inner :where(.category-letter-heading) {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1rem 0 0.35rem;
+  color: color-mix(in oklab, var(--fg-1) 92%, transparent);
+}
+
+.page.page-category .page-category-inner :where(.category-letter-list) {
+  margin: 0 0 0.6rem 1.1rem;
+  padding: 0;
+  list-style: disc;
+}
+
+.page.page-category .page-category-inner :where(.category-empty-msg) {
+  margin-top: 0.5rem;
+}
+
+.page.page-category .page-category-inner :where(.category-parent-chain) {
+  margin: 0 0 0.85rem;
+  font-size: 0.93rem;
+  color: color-mix(in oklab, var(--fg-1) 88%, transparent);
+}
+
+.page.page-category .page-category-inner :where(.category-parent-chain) .category-parent-link {
+  font-weight: 500;
+}
+
+.page.page-category .page-category-inner :where(nav.category-parent-nav) :where(.category-section-heading) {
+  margin-top: 0.35rem;
+}
+
+.page.page-category .page-category-inner :where(nav.category-subcategories) :where(.category-section-heading) {
+  margin-top: 0.85rem;
+}
+
+.page.page-category .page-category-inner :where(.category-parent-list),
+.page.page-category .page-category-inner :where(.category-subcat-list) {
+  margin: 0.35rem 0 0 1.1rem;
+  padding: 0;
+  list-style: disc;
+  column-width: 12rem;
+  column-gap: 2rem;
+}
+
+:where(.muted-label) {
+  color: var(--fg-muted);
+  word-break: break-word;
+}
+
+:where(.wiki-body)::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+@media (max-width: 900px) {
+  .wiki-body .infobox-stack,
+  :where(.wiki-body) :where(.infobox) {
+    float: none;
+    width: 100%;
+    margin-left: 0;
+    max-width: none;
+  }
+
+  :where(.article-top-strip) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  :where(.toc-floating-toggle) {
+    left: var(--space-2);
+    top: 3.4rem;
+  }
+
+  :where(.wiki-references) ol {
+    column-count: 1;
+  }
+}
+
+:where(.site-footer) {
+  margin: 1.2rem auto 0 auto;
+  padding: 0.7rem 1rem 1rem 1rem;
+  max-width: min(1200px, 96vw);
+  border-top: 1px solid color-mix(in oklab, var(--border) 65%, black 35%);
+}
+
+:where(.site-footer-nav) {
+  margin: 0 0 0.45rem 0;
+}
+
+/* Matches theme-dark.css global `a` / `a:hover`: accent, no underline until hover */
+:where(.site-footer-nav) a {
+  color: var(--accent);
+  text-decoration: none;
+  text-transform: capitalize;
+}
+
+:where(.site-footer-nav) a:hover {
+  text-decoration: underline;
+}
+
+:where(.page-last-edited) {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 0.82rem;
+  line-height: var(--line-height-1);
+}
+
+/* Disclaimer hero (formerly inline-styled Markdown block; keep markup free of `;` for validate_human_text) */
+:where(.caveat-hero) {
+  text-align: center;
+  margin: 0 0 1.75rem 0;
+}
+
+:where(.caveat-hero-title) {
+  margin: 0 0 0.75rem 0;
+  font-size: clamp(1.125rem, 3.5vw, 1.75rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+:where(.caveat-hero-img) {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
+}
+
+:where(.caveat-hero-tagline) {
+  margin: 0.75rem 0 0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media print {
+  :where(.skip-link) {
+    display: none;
+  }
+
+  :where(.site-header) { display: none; }
+
+  :where(.sidebar-right) { display: none; }
+
+  :where(.layout-grid) {
+    display: block;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+
+  :where(.page-search button) {
+    display: none;
+  }
+}
+
+/* Inbound wiki graph (static bundle subset), injected by assets/js/app.js */
+:where(.wiki-body) .wiki-inbound-links {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+:where(.wiki-body) .wiki-inbound-intro {
+  margin: 0.35em 0 0.6em 0;
+  font-size: var(--font-size-2);
+  color: var(--accent-highlight);
+  line-height: var(--line-height-1);
+}
+
+:where(.wiki-body) .wiki-inbound-list {
+  margin: 0.45em 0 0.85em 0;
+}

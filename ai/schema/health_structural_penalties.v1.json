@@ -1,0 +1,1 @@
+{"v":1,"apply_penalties":false,"note":"Forks may set apply_penalties to true so sparse link graphs, citation coverage, or high orphan ratios reduce trust_score in scripts/build_health.py. Base scaffold leaves this off."}

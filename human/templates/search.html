@@ -1,0 +1,9 @@
+<section class="page page-search">
+  <h1>{{ title | default("Search") }}</h1>
+  <form class="search-form" method="get" action="/search/">
+    <label class="visually-hidden" for="wiki-search-q">Keyword search across exported wiki pages</label>
+    <input id="wiki-search-q" type="search" name="q" value="{{ q }}" placeholder="Search wiki content">
+    <button type="submit">Search</button>
+  </form>
+  <section id="wiki-search-results" class="results" role="region" aria-label="Search results" aria-live="polite" aria-atomic="true">{{ results | safe }}</section>
+</section>

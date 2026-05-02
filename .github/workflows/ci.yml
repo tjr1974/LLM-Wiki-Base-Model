@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-and-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Mirrors the **`pytest`** half of **`make wiki-all`** (wiki-ci + wiki-quality-gate follow in the next step).
+      - name: Run pytest
+        run: pytest -q
+
+      # Forks may export VALIDATE_WIKI_ARGS=--strict-citation-meta before make wiki-ci / autopilot.py for tighter citation scaffolding.
+      # Forks with a compiled human/site/ export may additionally run: make wiki-static-export-check (requires human/site/meta.json).
+      # wiki-quality-gate is optional scaffold glue (skipped dashboard exits 0) and keeps the Makefile entry exercised in Actions.
+      - name: Run wiki CI gates
+        run: |
+          make wiki-ci
+          make wiki-quality-gate

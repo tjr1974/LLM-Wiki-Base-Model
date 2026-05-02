@@ -1,0 +1,22 @@
+{
+  "domain": "empty_base_model",
+  "version": 1,
+  "cases": [
+    {
+      "id": "q1",
+      "question": "What is the example entity page cited to?",
+      "required_substrings": [
+        "[[sources/example-stub#sec-test]]"
+      ],
+      "reference_pages": ["wiki/entities/example-entity.md"]
+    },
+    {
+      "id": "q2",
+      "question": "Does the dispute page cite the stub source?",
+      "required_substrings": [
+        "[[sources/example-stub#sec-test]]"
+      ],
+      "reference_pages": ["wiki/disputes/example-dispute-stub.md"]
+    }
+  ]
+}

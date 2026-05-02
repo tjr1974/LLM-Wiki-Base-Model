@@ -1,0 +1,9 @@
+{
+  "v": 1,
+  "budgets": {
+    "search_index_max_bytes": 8000000,
+    "app_js_max_bytes": 300000,
+    "theme_css_max_bytes": 200000,
+    "content_css_max_bytes": 200000
+  }
+}

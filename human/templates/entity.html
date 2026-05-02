@@ -1,0 +1,5 @@
+<section class="page page-entity">
+  <h1>{{ entity.title | default(title | default("Entity")) }}</h1>
+  <section class="facts">{{ facts | safe }}</section>
+  <section class="related">{{ related | safe }}</section>
+</section>

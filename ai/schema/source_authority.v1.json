@@ -1,0 +1,6 @@
+{
+  "v": 1,
+  "default_authority": 1,
+  "rules": [],
+  "note": "Forks tune host/pathauthority used by scripts/dedupe_runtime.py picking among duplicate ingest SIDs (match substrings against manifest raw_hint path). Expert/challenge tooling in forks may reuse this schema."
+}

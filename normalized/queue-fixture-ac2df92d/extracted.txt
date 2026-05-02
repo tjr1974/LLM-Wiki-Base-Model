@@ -1,0 +1,2 @@
+示例 queue fixture
+Example queue fixture

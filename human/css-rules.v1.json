@@ -1,0 +1,61 @@
+{
+  "v": 1,
+  "fail_on_issues": false,
+  "emit_warnings": false,
+  "selector": {
+    "max_combinators": 16,
+    "max_class_selectors": 14,
+    "max_dense_terms": 20,
+    "forbid_id_selectors": true,
+    "forbid_important": true
+  },
+  "template": {
+    "max_depth": 18,
+    "max_div_count": 8
+  },
+  "tokens": {
+    "spacing": [
+      "var(--space-0)",
+      "var(--space-1)",
+      "var(--space-2)",
+      "var(--space-3)",
+      "var(--space-4)",
+      "0"
+    ],
+    "font_size": [
+      "var(--font-size-1)",
+      "var(--font-size-2)",
+      "var(--font-size-3)",
+      "var(--font-size-4)"
+    ],
+    "font_weight": [
+      "var(--font-weight-regular)",
+      "var(--font-weight-strong)"
+    ],
+    "line_height": [
+      "1",
+      "var(--line-height-1)"
+    ]
+  },
+  "properties": {
+    "color_tokenized": [
+      "color",
+      "background",
+      "border",
+      "border-color",
+      "box-shadow"
+    ],
+    "margin_default_zero": true,
+    "padding_single_value": true,
+    "no_shadow": false,
+    "hex_only_in_root": true,
+    "typography_relaxed": true
+  },
+  "paths": {
+    "css": [
+      "human/assets/css/theme-dark.css",
+      "human/assets/css/content.css"
+    ],
+    "templates": "human/templates"
+  }
+}

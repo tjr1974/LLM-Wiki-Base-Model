@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "domain_regex": "shaolin|monastery|dengfeng|henan",
+  "root_pin_regex": "(?:Path\\(__file__\\)\\.resolve\\(\\)\\.parents\\[1\\]|Path\\(__file__\\)\\.resolve\\(\\)\\.parent\\.parent)",
+  "cli_markers": [
+    "argparse.ArgumentParser(",
+    "if __name__ == \"__main__\"",
+    "if __name__ == '__main__'"
+  ],
+  "ignore_by_flag_globs": {}
+}

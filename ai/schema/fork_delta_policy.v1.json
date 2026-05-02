@@ -1,0 +1,29 @@
+{
+  "v": 1,
+  "review_queue_max": 25,
+  "domain_specific_hints": [
+    "research",
+    "expert",
+    "governance",
+    "quality_",
+    "campaign",
+    "blocked_source",
+    "web_source",
+    "manual_capture",
+    "queue_web",
+    "regional_",
+    "dispute"
+  ],
+  "ignore_path_globs": [
+    "human/templates/dispute.html"
+  ],
+  "subsystem_weights": {
+    "scripts": 100,
+    "Makefile": 95,
+    ".github/workflows/ci.yml": 90,
+    "tests": 70,
+    "templates": 55,
+    "assets-css": 50,
+    "assets-js": 50
+  }
+}

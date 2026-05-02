@@ -1,0 +1,24 @@
+{
+  "v": 1,
+  "obj": {
+    "src": {
+      "k": ["sid", "tp", "lp", "rh", "ts", "n"],
+      "desc": "source manifest compact keys"
+    },
+    "chunk": {
+      "k": ["sid", "cid", "l", "t", "m"],
+      "desc": "normalized chunks; m is metadata map"
+    },
+    "claim": {
+      "k": ["qid", "cid", "txt", "ev", "cf", "lg", "st"],
+      "desc": "compiled claims; ev references [sid,cid] pairs"
+    },
+    "edge": {
+      "k": ["a", "b", "r", "w"],
+      "desc": "graph edge from node a to b relation r with weight w"
+    }
+  },
+  "cf": ["h", "m", "l"],
+  "st": ["ok", "disputed", "stale"],
+  "note": "AI-first canonical format. Human markdown is derived output only."
+}

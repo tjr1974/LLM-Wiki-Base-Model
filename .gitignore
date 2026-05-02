@@ -29,6 +29,13 @@ Thumbs.db
 *.swp
 *.swo
 
+# Cursor: ignore local workspace files; un-ignore `rules/` when sharing team guidance
+# (Git ignores children of an excluded parent unless each parent is re-included.)
+.cursor/**
+!.cursor/
+!.cursor/rules/
+!.cursor/rules/**
+
 # Maintainer private prompts (see schema/protected-paths.md; also listed in .cursorignore)
 dev_prompts.txt
 

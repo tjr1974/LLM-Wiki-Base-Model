@@ -76,3 +76,15 @@ raw/inbox/**
 # Optional local scratch at repo root only
 /scratch/
 /tmp/
+
+# Empty placeholder in this scaffold; keep local experiments out of git
+temp/
+
+# Property-based tests (if added later)
+.hypothesis/
+
+# --- Avoid accidental commit of common key material ---
+*.pem
+*.p12
+id_rsa
+id_ed25519

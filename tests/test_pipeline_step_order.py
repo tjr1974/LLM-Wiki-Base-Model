@@ -218,6 +218,7 @@ def test_makefile_help_wiki_hub_echo_mentions_gitignore_policy() -> None:
     assert "hub-index.md" in hit
     assert ".gitignore" in hit
     assert "git add -f" in hit
+    assert "index drift" in hit
 
 
 def test_makefile_help_wiki_ci_echo_lists_preflight_and_tail_gate_scripts() -> None:

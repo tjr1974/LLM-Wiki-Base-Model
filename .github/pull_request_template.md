@@ -15,7 +15,7 @@ Skip if this PR is tooling-only or a trivial typo. Otherwise fill in the PR desc
 
 - [ ] No secrets: **`.env`** and local-only paths stay untracked (see **`.gitignore`**, **`SECURITY.md`**, **`.env.example`**).
 - [ ] If **`ai/runtime/`** diffs are only refreshed timestamps or unintended gate churn, restored with **`make wiki-restore-runtime`** (or committed intentionally).
-- [ ] **Hub rollup (LLM Wiki Manager):** **`make wiki-hub`** writes **`wiki/synthesis/hub-index.md`**, which is **`.gitignore`d** in this checkout. Use **`git add -f wiki/synthesis/hub-index.md`** only when you intend to commit a curated hub (**`README.md`**, **`schema/wiki-quickstart.md`**).
+- [ ] **Hub rollup (LLM Wiki Manager):** **`make wiki-hub`** writes **`wiki/synthesis/hub-index.md`**, which is **`.gitignore`d** in this checkout. Use **`git add -f wiki/synthesis/hub-index.md`** only when you intend to commit a curated hub (**`README.md`**, **`schema/wiki-quickstart.md`**). Read **Operator note** there when **`index/`** drifts from **HEAD** after a local hub run.
 - [ ] Optional: **`git config core.hooksPath scripts/githooks`** so **`git push`** runs **`make wiki-check`** by default (**`scripts/githooks/README.md`**, override with **`WIKI_PRE_PUSH=off`**, **`WIKI_PRE_PUSH=ci`**, or **`WIKI_PRE_PUSH=all`**).
 
 ## Verification

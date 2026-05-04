@@ -315,6 +315,7 @@ def test_orientation_docs_remain_linked() -> None:
     ci_yml = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     assert "wiki-log-tail" in ci_yml
     assert "make wiki-hub" in ci_yml
+    assert "index drift" in ci_yml
     assert "hub-index.md" in ci_yml
     assert "wiki-toolchain.md" in ci_yml
     assert "config.yml" in ci_yml
@@ -325,6 +326,7 @@ def test_orientation_docs_remain_linked() -> None:
     pr_tpl = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
     assert "wiki-log-tail" in pr_tpl
     assert "make wiki-hub" in pr_tpl
+    assert "Operator note" in pr_tpl
     assert "git add -f wiki/synthesis/hub-index.md" in pr_tpl
     assert "wiki-toolchain.md" in pr_tpl
     assert "config.yml" in pr_tpl

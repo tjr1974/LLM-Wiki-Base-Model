@@ -28,6 +28,7 @@ WIKI_CORPUS_AUTHORING_PROMPT_NEEDLES: frozenset[str] = frozenset(
         "editorial-policy.md",
         "fix_citation_metadata.py",
         "fork-sync.md",
+        "git add -f wiki/synthesis/hub-index.md",
         "human-wiki-automation-boundary.md",
         "human_readiness_policy.v1.json",
         "immutable upstream",
@@ -65,6 +66,7 @@ WIKI_CORPUS_AUTHORING_PROMPT_NEEDLES: frozenset[str] = frozenset(
         "wiki-quickstart.md",
         "wiki/main.md",
         "wiki/synthesis/activity-log.md",
+        "wiki/synthesis/hub-index.md",
         "wiki_paths.py",
     )
 )

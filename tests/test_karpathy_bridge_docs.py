@@ -343,6 +343,7 @@ def test_orientation_docs_remain_linked() -> None:
     assert "wiki-log-tail" in issue_tpl
     assert "make wiki-hub" in issue_tpl
     assert "hub-index.md" in issue_tpl
+    assert "index drift" in issue_tpl
     assert "test_gitignore_excludes_optional_hub_index_rollup" in issue_tpl
     assert "test_makefile_help_wiki_hub_echo_mentions_gitignore_policy" in issue_tpl
     assert ".cursor/rules" in issue_tpl
@@ -470,6 +471,7 @@ def test_cursor_wiki_rules_files_present_and_scoped() -> None:
     assert "schema/AGENTS.md" in p
     assert "wiki-manager" in p
     assert "drift including **`make wiki-hub`**" in p
+    assert "index drift" in p
 
 
 def test_wiki_corpus_authoring_prompt_mentions_wiki_log_tail() -> None:

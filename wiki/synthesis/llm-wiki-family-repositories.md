@@ -28,7 +28,7 @@ notes: "Authoritative maintainer map for the four related LLM Wiki checkouts on 
 | **LLM Wiki Manager** | `https://github.com/tjr1974/LLM-Wiki-Manager.git` |
 | **LLM Wiki Base Model** | `https://github.com/tjr1974/LLM-Wiki-Base-Model.git` |
 
-On a **Manager** checkout, keep **`origin`** → Manager and add **`base-model`** → Base Model when you need **`fetch`** or **cherry-picks** from the sibling template. Root **`README.md`** (**Git remotes**) spells out the same layout.
+On a **Manager** checkout, keep **`origin`** → Manager and add **`base-model`** → Base Model when you need **`fetch`** or **cherry-picks** from the sibling template. On a **Base Model** checkout, keep **`origin`** → Base Model and add **`manager`** → Manager when you need the same toward **Manager**. Root **`README.md`** (**Git remotes**) spells out both layouts.
 
 ## How paths enter automation
 

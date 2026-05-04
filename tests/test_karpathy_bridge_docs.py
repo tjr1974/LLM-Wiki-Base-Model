@@ -376,6 +376,8 @@ def test_wiki_quickstart_read_first_lists_bridge() -> None:
     assert "config.yml" in text
     assert "Operator synthesis and `lint_wiki.py` claim bullets" in text
     assert "Screenshots at repo root" in text
+    assert "**Operator note.**" in text
+    assert "rm -f wiki/synthesis/hub-index.md" in text
 
 
 def test_ingest_prompt_mentions_root_screenshot_hygiene() -> None:

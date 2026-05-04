@@ -386,6 +386,8 @@ def test_wiki_edit_prompt_mentions_query_writeback() -> None:
     assert "llm-wiki-family-repositories.md" in edit
     assert "Operator synthesis and `lint_wiki.py` claim bullets" in edit
     assert "Root screenshots" in edit
+    assert "make wiki-hub" in edit
+    assert "git add -f wiki/synthesis/hub-index.md" in edit
 
 
 def test_llm_wiki_family_synthesis_page_lists_four_paths() -> None:

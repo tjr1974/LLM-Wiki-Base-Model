@@ -24,6 +24,8 @@ Use **two passes** when useful.
 
 **Index-first exploration (gist).** When you do not know which page to open, skim **`index/index.md`** and **`wiki/main.md`** before loading many articles (the gist's habit of reading the content index first, then drilling in). Use **`make wiki-query`** when scored chunks from **`ai/runtime/`** are enough.
 
+**Hub rollup.** After large navigation edits, **`make wiki-hub`** refreshes **`wiki/synthesis/hub-index.md`**. On **LLM Wiki Manager** that path is **`.gitignore`d**. Use **`git add -f wiki/synthesis/hub-index.md`** only when you intend to commit a curated hub (**`README.md`**, **`schema/wiki-quickstart.md`**, **`prompts/wiki-corpus-authoring.txt`**).
+
 **Session chronicle (optional).** To mirror the [Karpathy LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) append-only log habit, append dated sections to **`wiki/synthesis/activity-log.md`** using the heading convention described there. **`make wiki-log-tail`** shows the last five dated headings without opening the file. **`schema/karpathy-llm-wiki-bridge.md`** explains how that complements **`index/index.md`** and **`ai/runtime/`** logs.
 
 **Operator synthesis pages.** On **LLM Wiki Manager**, **`wiki/synthesis/`** text that lists checkouts, **`make`** targets, or env wiring is usually **not** a set of encyclopedic source-backed bullets. Prefer **markdown tables** so **`lint_wiki.py`** **`logs/lint/`** stays signal-heavy. See **`karpathy-llm-wiki-bridge.md`** subsection **Operator synthesis and `lint_wiki.py` claim bullets**. Before **`git add -f`** on root **`llm_wiki_*`** images or pasting screenshots into public tickets, read **`SECURITY.md`** (**Root screenshots**).

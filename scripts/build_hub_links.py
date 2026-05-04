@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Emit a deterministic navigation index for non-source wiki pages (topology maintenance)."""
+"""Emit a deterministic navigation index for non-source wiki pages (topology maintenance).
+
+On **LLM Wiki Manager**, default output **`wiki/synthesis/hub-index.md`** is **`.gitignore`d`**
+(see **`README.md`**, **`schema/wiki-quickstart.md`**, **`schema/karpathy-llm-wiki-bridge.md`**).
+Use **`git add -f wiki/synthesis/hub-index.md`** when intentionally tracking a curated hub.
+"""
 
 from __future__ import annotations
 

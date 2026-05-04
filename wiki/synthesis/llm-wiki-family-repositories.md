@@ -1,7 +1,7 @@
 ---
 type: synthesis
 title: "LLM Wiki family repositories"
-updated: 2026-05-03
+updated: 2026-05-04
 lang_primary: en
 categories:
   - Meta
@@ -20,6 +20,15 @@ notes: "Authoritative maintainer map for the four related LLM Wiki checkouts on 
 | **LLM Wiki Base Model** | Neutral sibling template, **`COMPARE=`** / **`WIKI_MANAGER_COMPARE_ROOT`** diff left side, cherry-pick target for shared tooling | `/home/admn/Downloads/LLM Wiki Base Model` |
 | **Shaolin Monastery Research System** | Domain child wiki (registered in **`ai/schema/wiki_manager_registry.v1.json`**) | `/home/admn/Downloads/Shaolin Monastery Research System` |
 | **Tai-Pan Wiki** | Domain child wiki (registered in **`ai/schema/wiki_manager_registry.v1.json`**) | `/home/admn/Downloads/Tai-Pan Wiki` |
+
+## Public HTTPS remotes
+
+| Repository | Typical **`git clone`** URL |
+|------------|-----------------------------|
+| **LLM Wiki Manager** | `https://github.com/tjr1974/LLM-Wiki-Manager.git` |
+| **LLM Wiki Base Model** | `https://github.com/tjr1974/LLM-Wiki-Base-Model.git` |
+
+On a **Manager** checkout, keep **`origin`** → Manager and add **`base-model`** → Base Model when you need **`fetch`** or **cherry-picks** from the sibling template. Root **`README.md`** (**Git remotes**) spells out the same layout.
 
 ## How paths enter automation
 

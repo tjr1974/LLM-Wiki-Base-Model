@@ -46,6 +46,7 @@ WIKI_CORPUS_AUTHORING_PROMPT_NEEDLES: frozenset[str] = frozenset(
         "make wiki-topic-sources",
         "make wiki-validate",
         "non-source",
+        "Operator note",
         "Operator synthesis and `lint_wiki.py` claim bullets",
         "page-contracts.md",
         "proposed/",
@@ -399,6 +400,7 @@ def test_wiki_edit_prompt_mentions_query_writeback() -> None:
     assert "Root screenshots" in edit
     assert "make wiki-hub" in edit
     assert "git add -f wiki/synthesis/hub-index.md" in edit
+    assert "Operator note" in edit
 
 
 def test_llm_wiki_family_synthesis_page_lists_four_paths() -> None:

@@ -93,6 +93,7 @@ Commentary on the gist sometimes argues that derived wikis drop nuance and still
 Discussion on the gist also flags **very large indexes**: an AI-maintained **`index.md`** can become its own wall of text. Mitigations that stay on-repo and topic-neutral:
 
 - Treat **`wiki/main.md`** (and optional **`wiki/synthesis/hub-index.md`**, refreshed with **`make wiki-hub`**) as **human-sized routing** into subtrees before loading every catalog line of **`index/index.md`**.
+- **LLM Wiki Manager** lists generated **`wiki/synthesis/hub-index.md`** under **`.gitignore`** so **`make wiki-hub`** keeps **`git status`** clean. Use **`git add -f wiki/synthesis/hub-index.md`** when a fork tracks a curated hub. See **`README.md`** and **`schema/wiki-quickstart.md`**.
 - Use **`index/links.json`**, **`ai/runtime/graph.min.json`**, and **`ai/runtime/backlinks.min.json`** when tooling or agents need structure without reading all prose at once.
 - Use **`make wiki-topic-sources`** (**`find_sources_for_topic.py`**) to narrow **`wiki/sources/`** during authoring triage.
 - Optional external hybrid search (for example gist-cited **qmd**-class stacks) remains a **fork** choice. Keep **`wiki-compile`** authoritative for citation labels and graph slices so evidence ids stay stable.

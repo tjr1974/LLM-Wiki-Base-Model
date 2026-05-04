@@ -136,6 +136,9 @@ def test_karpathy_bridge_memex_supervised_ingest_and_large_index_mitigations() -
     assert "supervised ingest" in text.lower()
     assert "index-first" in text.lower() or "index first" in text.lower()
     assert "make wiki-hub" in text
+    assert "wiki/synthesis/hub-index.md" in text
+    assert ".gitignore" in text
+    assert "git add -f wiki/synthesis/hub-index.md" in text
     assert "find_sources_for_topic.py" in text
 
 

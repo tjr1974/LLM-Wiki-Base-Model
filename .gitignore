@@ -42,6 +42,9 @@ dev_prompts.txt
 # --- Generated lint logs ---
 logs/
 
+# Optional hub rollup from `make wiki-hub` (not tracked in this scaffold; `git add -f` to commit a curated copy)
+wiki/synthesis/hub-index.md
+
 # --- Fork-built static exports (templates live in-repo; baked HTML is local) ---
 human/site/
 

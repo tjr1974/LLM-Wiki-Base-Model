@@ -426,6 +426,7 @@ def test_cursor_wiki_rules_files_present_and_scoped() -> None:
     assert ".gitignore" in p
     assert "test_karpathy_bridge_docs.py" in p
     assert "test_gitattributes_marks_raster_images_binary" in p
+    assert "test_gitignore_excludes_optional_hub_index_rollup" in p
     assert "SECURITY.md" in p
     assert "test_security_md_warns_query_artifact_path" in p
     assert "Screenshots at repo root" in p
@@ -462,6 +463,12 @@ def test_gitignore_excludes_root_llm_wiki_media_globs() -> None:
     assert "/llm_wiki_*.png" in text
     assert "/llm_wiki_*.jpg" in text
     assert "/llm_wiki_*.jpeg" in text
+
+
+def test_gitignore_excludes_optional_hub_index_rollup() -> None:
+    """`make wiki-hub` output stays out of status noise unless force-added."""
+    text = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    assert "wiki/synthesis/hub-index.md" in text
 
 
 def test_gitattributes_marks_raster_images_binary() -> None:

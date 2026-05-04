@@ -38,3 +38,6 @@ def test_query_helper_emits_chunks_present():
     assert "chunks_present" in payload
     assert payload["chunks_present"] is True
     assert "hits" in payload
+    assert payload.get("retrieval") == "keyword_overlap"
+    for hit in payload.get("hits") or []:
+        assert hit.get("cf") == "l"

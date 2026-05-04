@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Repeatedly run ``autopilot.py`` (inherits environment: ``VALIDATE_WIKI_ARGS`` applies to nested ``validate_wiki`` like ``make wiki-ci``)."""
+"""Repeatedly run ``autopilot.py --with-queue`` each cycle (inherits ``VALIDATE_WIKI_ARGS`` on nested ``validate_wiki`` like ``Makefile`` ``wiki-validate`` / ``wiki-check`` / ``wiki-ci``).
+
+Optional ``--ci-parity`` forwards to ``autopilot.py`` so typography, wiki lint, and outbound links match ``make wiki-ci`` hard failures.
+
+Heartbeat ``out`` / ``err`` tails call ``wiki_paths.autopilot_log_tail_chars()`` (``AUTOPILOT_LOG_TAIL_CHARS``, same defaults as ``autopilot.py``).
+
+Long-running automation for the Karpathy gist *lint* habit with ingest queue prefix. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 
 from __future__ import annotations
 
@@ -13,18 +20,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HB = ROOT / "ai" / "runtime" / "daemon.heartbeat.json"
+_SCRIPTS = Path(__file__).resolve().parent
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
+import wiki_paths  # noqa: E402
 
 
-def _run_once(strict: bool) -> dict:
+def _run_once(strict: bool, ci_parity: bool) -> dict:
     cmd = [sys.executable, str(ROOT / "scripts" / "autopilot.py"), "--with-queue"]
+    if ci_parity:
+        cmd.append("--ci-parity")
     if strict:
         cmd.append("--strict")
     p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    failed = p.returncode != 0
+    n = wiki_paths.autopilot_log_tail_chars(failed=failed)
+    out = p.stdout or ""
+    err = p.stderr or ""
     return {
         "ts": datetime.now(timezone.utc).isoformat(),
+        "ci_parity": ci_parity,
         "rc": p.returncode,
-        "out": p.stdout[-2000:],
-        "err": p.stderr[-2000:],
+        "out": out[-n:],
+        "err": err[-n:],
     }
 
 
@@ -33,12 +51,17 @@ def main() -> None:
     ap.add_argument("--interval", type=int, default=60, help="seconds between cycles")
     ap.add_argument("--cycles", type=int, default=0, help="0 = run forever")
     ap.add_argument("--strict", action="store_true", help="fail cycle on first pipeline error")
+    ap.add_argument(
+        "--ci-parity",
+        action="store_true",
+        help="forward --ci-parity to autopilot.py (typography, lint_wiki, outbound links hard-fail like make wiki-ci)",
+    )
     args = ap.parse_args()
 
     i = 0
     while True:
         i += 1
-        r = _run_once(args.strict)
+        r = _run_once(args.strict, args.ci_parity)
         HB.parent.mkdir(parents=True, exist_ok=True)
         HB.write_text(json.dumps({"cycle": i, **r}, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
         print(f"cycle={i} rc={r['rc']}")

@@ -8,6 +8,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_daemon_invokes_autopilot_with_queue() -> None:
+    """``daemon.py`` is the long-running wrapper around the queue-first pipeline."""
+    text = (ROOT / "scripts" / "daemon.py").read_text(encoding="utf-8")
+    assert "autopilot.py" in text and "--with-queue" in text
+    assert "--ci-parity" in text and "ci_parity" in text
+
+
 def _jsonl(path: Path):
     out = []
     if not path.exists():
@@ -43,3 +50,25 @@ def test_daemon_single_cycle_writes_heartbeat():
     assert hb.exists()
     data = json.loads(hb.read_text(encoding="utf-8"))
     assert data["cycle"] >= 1
+    assert data.get("ci_parity") is False
+
+
+def test_daemon_ci_parity_cycle_records_flag_in_heartbeat():
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "daemon.py"),
+            "--cycles",
+            "1",
+            "--interval",
+            "1",
+            "--ci-parity",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert r.returncode == 0, r.stdout + r.stderr
+    hb = ROOT / "ai" / "runtime" / "daemon.heartbeat.json"
+    data = json.loads(hb.read_text(encoding="utf-8"))
+    assert data.get("ci_parity") is True

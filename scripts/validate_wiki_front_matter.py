@@ -7,7 +7,10 @@ Checks:
   - `type` present (recommended for indexing and templates).
   - `title` present (recommended for manifests and previews).
 
-Fails on YAML syntax errors anywhere under scanned paths."""
+Fails on YAML syntax errors anywhere under scanned paths.
+
+Part of ``make wiki-check`` / ``make wiki-ci``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 
 from __future__ import annotations
 

@@ -20,6 +20,70 @@ def _load_validate_human_text():
     return mod
 
 
+def test_human_text_md_globs_include_main_sources_templates() -> None:
+    """Guard previously missing reader-facing Markdown from silent typography regressions."""
+    mod = _load_validate_human_text()
+    rels = {p.relative_to(ROOT).as_posix() for p in mod._iter_target_files()}
+    assert "wiki/main.md" in rels
+    assert any(r.startswith("wiki/sources/") and r.endswith(".md") for r in rels)
+    assert any(r.startswith("wiki/_templates/") for r in rels)
+    assert any(r.startswith("wiki/synthesis/") and r.endswith(".md") for r in rels)
+
+
+def test_manager_narrows_validate_human_text_wiki_globs() -> None:
+    """LLM Wiki Manager keeps typography on machine-first wiki surfaces only."""
+    mod = _load_validate_human_text()
+    for pat in (
+        "wiki/entities/**/*.md",
+        "wiki/events/**/*.md",
+        "wiki/themes/**/*.md",
+        "wiki/disputes/**/*.md",
+        "wiki/chronology/**/*.md",
+        "wiki/categories/**/*.md",
+    ):
+        assert pat not in mod.MD_GLOBS, pat
+    assert "wiki/synthesis/**/*.md" in mod.MD_GLOBS
+
+
+def _schema_agents_validate_human_text_bullet_line() -> str:
+    text = (ROOT / "schema" / "AGENTS.md").read_text(encoding="utf-8")
+    for ln in text.splitlines():
+        if ln.strip().startswith("- `python3 scripts/validate_human_text.py`"):
+            return ln
+    raise AssertionError("missing validate_human_text bullet in schema/AGENTS.md")
+
+
+def test_schema_agents_single_validate_human_text_bullet() -> None:
+    text = (ROOT / "schema" / "AGENTS.md").read_text(encoding="utf-8")
+    hits = [
+        ln
+        for ln in text.splitlines()
+        if ln.strip().startswith("- `python3 scripts/validate_human_text.py`")
+    ]
+    assert len(hits) == 1, f"expected exactly one validate_human_text bullet, got {len(hits)}: {hits!r}"
+
+
+def test_schema_agents_documents_each_md_glob() -> None:
+    """Keep schema/AGENTS.md in sync with scripts/validate_human_text.py MD_GLOBS."""
+    mod = _load_validate_human_text()
+    line = _schema_agents_validate_human_text_bullet_line()
+    for pat in mod.MD_GLOBS:
+        if (
+            pat.startswith("wiki/")
+            and pat.endswith("/**/*.md")
+            and pat
+            not in (
+                "wiki/main.md",
+                "wiki/_templates/**/*.md",
+                "wiki/sources/**/*.md",
+            )
+        ):
+            prefix = pat[: -len("/**/*.md")]
+            assert prefix in line, f"schema/AGENTS.md missing wiki subtree {prefix!r} for glob {pat!r}"
+        else:
+            assert pat in line, f"schema/AGENTS.md missing glob pattern {pat!r}"
+
+
 def test_human_text_validator_passes():
     r = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "validate_human_text.py")],

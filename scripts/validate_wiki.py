@@ -6,6 +6,8 @@ Any ERROR-level finding exits with code **1**. Optional **--strict-citation-meta
 or invalid confidence scaffolding on cited claim bullets to ERROR. Exemptions include inline
 confidence, citation-only inventories, navigation-style bullets (**detail page:** etc.), and short
 labelled inventory preambles such as **Supporting** or **Position A cites**.
+
+Runs under ``make wiki-check`` / ``make wiki-ci`` (gist *lint* hard gates). See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 import wiki_paths
 
 
@@ -63,3 +65,25 @@ def test_safe_repo_rel_outside_root() -> None:
     root = Path("/tmp/wiki_paths_safe_rel_root_placeholder")
     outside = Path("/tmp/wiki_paths_safe_rel_peer_placeholder_outside_root")
     assert wiki_paths.safe_repo_rel(outside, root) == outside.as_posix()
+
+
+def test_autopilot_log_tail_chars_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("AUTOPILOT_LOG_TAIL_CHARS", raising=False)
+    assert wiki_paths.autopilot_log_tail_chars(failed=False) == 2000
+    assert wiki_paths.autopilot_log_tail_chars(failed=True) == 16_000
+
+
+def test_autopilot_log_tail_chars_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "9999")
+    assert wiki_paths.autopilot_log_tail_chars(failed=False) == 9999
+    assert wiki_paths.autopilot_log_tail_chars(failed=True) == 9999
+
+
+def test_autopilot_log_tail_chars_clamps_minimum(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "64")
+    assert wiki_paths.autopilot_log_tail_chars(failed=False) == 256
+
+
+def test_autopilot_log_tail_chars_clamps_maximum(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "9999999")
+    assert wiki_paths.autopilot_log_tail_chars(failed=False) == 500_000

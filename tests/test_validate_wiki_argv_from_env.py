@@ -1,4 +1,4 @@
-"""Shared ``validate_wiki_argv_from_env()`` used by autopilot matches ``Makefile`` ``VALIDATE_WIKI_ARGS``."""
+"""``validate_wiki_argv_from_env()`` mirrors ``Makefile`` ``VALIDATE_WIKI_ARGS`` on ``wiki-validate`` / ``wiki-check`` / ``wiki-ci`` when used by ``autopilot.py`` / ``daemon.py``."""
 
 from __future__ import annotations
 

@@ -58,7 +58,7 @@ Human-authored substantive claims elsewhere should prefer explicit nested `- con
 
 ## Consistency with style and layering
 
-Citation links answer **which evidence supports a bullet**. Readers still need **clear prose** separating attested wording, synthesis, hypothesis, folklore, or modern framing. Naming conventions, neutrality, dynasty labels, typography enforced on human paths (`scripts/validate_human_text.py`), and article structure norms live alongside this contract in **[editorial-policy.md](editorial-policy.md)**. Evidence blocks supply `confidence` and `quote` context. Editorial policy supplies how to signal interpretive layers in running text.
+Citation links answer **which evidence supports a bullet**. Readers still need **clear prose** separating attested wording, synthesis, hypothesis, folklore, or modern framing. Naming conventions, neutrality, dynasty labels, typography wherever **`scripts/validate_human_text.py`** applies (**`schema/AGENTS.md`**), and article structure norms live alongside this contract in **[editorial-policy.md](editorial-policy.md)**. Evidence blocks supply `confidence` and `quote` context. Editorial policy supplies how to signal interpretive layers in running text.
 
 ---
 
@@ -67,3 +67,4 @@ Citation links answer **which evidence supports a bullet**. Readers still need *
 - **[editorial-policy.md](editorial-policy.md)**. Structure, layering, typography, tooling.
 - **[human-wiki-automation-boundary.md](human-wiki-automation-boundary.md)**. Why validators can check citation shape while claim-level judgment stays with authors or tasked LLMs. What scripts must not automate for narrative pages.
 - **[wiki-quickstart.md](wiki-quickstart.md)**. Contributor orientation and command checklist.
+- **[karpathy-llm-wiki-bridge.md](karpathy-llm-wiki-bridge.md)**. Karpathy LLM Wiki gist vocabulary (ingest, query, lint, index versus log) mapped to **`make`** targets and **`ai/runtime/`** artifacts here.

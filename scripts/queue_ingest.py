@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Append ingest queue rows for files under ``raw/`` (machine ingest scheduling).
+
+Supports the Karpathy gist *ingest* operation before ``make wiki-compile``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse

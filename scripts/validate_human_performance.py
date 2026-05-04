@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Asset byte budgets on exported ``human/site`` HTML (fork **``make wiki-perf``** / static export gates).
+
+See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse

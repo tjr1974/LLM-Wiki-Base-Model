@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Probe or inventory outbound URLs in Markdown (gist *lint* / release hygiene).
+
+Runs under ``make wiki-ci`` with ``--strict`` in CI. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse

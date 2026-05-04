@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Normalize raw inputs into ``normalized/<sid>/`` bundles for downstream compile.
+
+First deterministic step on the Karpathy LLM Wiki gist *ingest* path (with ``wiki/sources`` pages and ``make wiki-compile``). See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse

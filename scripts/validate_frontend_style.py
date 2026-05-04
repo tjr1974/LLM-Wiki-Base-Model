@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""HTML and CSS checks against ``human/css-rules.v1.json`` for export chrome.
+
+``make wiki-ci`` preflight. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

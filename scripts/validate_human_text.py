@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+"""Typography checks for paths enumerated in MD_GLOBS.
+
+**LLM Wiki Manager** narrows **`wiki/`** coverage to **machine-first** surfaces (**`wiki/main.md`**, **`wiki/_templates/`**, **`wiki/sources/`**, **`wiki/synthesis/`**) so encyclopedia stub subtrees stay out of this typography pass. Forks widen **`MD_GLOBS`** again per **`schema/fork-sync.md`**.
+
+Also covers **`proposed/`**, **`schema/`**, **`prompts`**, **`README.md`**, **`SECURITY.md`**, and HTML under **`human/templates/`** or **`human/site/`**.
+
+See **`schema/AGENTS.md`** (validate_human_text.py bullet). Writes **`ai/runtime/human_text_lint.ndjson`**.
+
+Runs in **`make wiki-check`** / **`make wiki-ci`** (gist *lint* typography slice). See **`schema/karpathy-llm-wiki-bridge.md`**.
+"""
+
 from __future__ import annotations
 
 import html
@@ -12,13 +23,11 @@ OUT = ROOT / "ai" / "runtime" / "human_text_lint.ndjson"
 MD_GLOBS = [
     "README.md",
     "SECURITY.md",
+    "proposed/**/*.md",
     "schema/**/*.md",
-    "wiki/entities/**/*.md",
-    "wiki/events/**/*.md",
-    "wiki/themes/**/*.md",
-    "wiki/disputes/**/*.md",
-    "wiki/chronology/**/*.md",
-    "wiki/categories/**/*.md",
+    "wiki/main.md",
+    "wiki/_templates/**/*.md",
+    "wiki/sources/**/*.md",
     "wiki/synthesis/**/*.md",
     "human/templates/**/*.html",
     "human/site/**/*.html",

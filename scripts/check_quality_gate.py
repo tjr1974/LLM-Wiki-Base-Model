@@ -15,6 +15,8 @@ severity as fork-only tooling that always required the file).
 Exit **2** also covers unreadable **`quality_dashboard`** JSON (**`invalid_dashboard_json`**),
 **`alerts`** not a list (**`invalid_dashboard_alerts`**), or **`rollup_ok`** not boolean
 (**`invalid_dashboard_rollup_ok_type`**).
+
+Runs from ``autopilot.py`` and ``make wiki-quality-gate``. See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

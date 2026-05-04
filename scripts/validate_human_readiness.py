@@ -2,7 +2,10 @@
 """Corpus-shape readiness thresholds for section-scoped encyclopedia Markdown.
 
 Counts only wiki/entities, events, themes, periods, chronology, synthesis, disputes (recursive).
-Omits wiki/main.md, wiki/sources, wiki/_templates, and any other wiki/*.md outside those dirs."""
+Omits wiki/main.md, wiki/sources, wiki/_templates, and any other wiki/*.md outside those dirs.
+
+Runs under ``make wiki-ci``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 
 from __future__ import annotations
 

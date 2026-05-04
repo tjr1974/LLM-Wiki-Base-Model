@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Roll cited bullets from wiki pages into ``ai/runtime/claims`` (gist *lint* / machine rollup).
+
+Runs inside ``make wiki-check`` before ``lint_wiki``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

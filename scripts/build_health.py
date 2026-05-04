@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Aggregate trust and health metrics from validators and graphs (gist *lint* rollup).
+
+Part of the ``make wiki-analyze`` tail. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

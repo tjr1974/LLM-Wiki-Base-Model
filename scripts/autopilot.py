@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Run the ordered wiki gate pipeline (gist *lint* bundle plus compile and CI-shaped steps).
+
+Chains the same subprocesses as ``make wiki-ci`` and the ``make wiki-analyze`` tail. Prefer ``make wiki-ci`` in CI for authoritative hard gates. Pass ``--ci-parity`` so typography, wiki lint, and outbound links flip ``ok`` false like ``make wiki-ci`` instead of ``soft_failures``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse
@@ -11,7 +15,7 @@ from pathlib import Path
 from typing import Iterator
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wiki_paths import validate_wiki_argv_from_env
+from wiki_paths import autopilot_log_tail_chars, validate_wiki_argv_from_env
 
 ROOT = Path(__file__).resolve().parents[1]
 _RUNTIME_LOCK_PATH = ROOT / "ai" / "runtime" / ".autopilot.runtime.lock"
@@ -31,7 +35,26 @@ def _exclusive_runtime_guard() -> Iterator[None]:
     try:
         import fcntl  # noqa: PLC0415
     except ImportError:
-        yield
+        # Windows and other platforms without fcntl: atomic create + unlink (see ``.gitignore``).
+        fp = None
+        try:
+            import os as _os  # noqa: PLC0415
+
+            fp = _RUNTIME_LOCK_PATH.open("x", encoding="utf-8")
+            fp.write(str(_os.getpid()))
+            fp.flush()
+        except (FileExistsError, PermissionError) as e:
+            raise RuntimeError(
+                f"autopilot lock held: {_RUNTIME_LOCK_PATH} "
+                "(another run in progress, or delete the file if the owner crashed)"
+            ) from e
+        try:
+            yield
+        finally:
+            if fp is not None:
+                fp.close()
+            with contextlib.suppress(OSError):
+                _RUNTIME_LOCK_PATH.unlink()
         return
     with _RUNTIME_LOCK_PATH.open("w", encoding="utf-8") as fp:
         fcntl.flock(fp.fileno(), fcntl.LOCK_EX)
@@ -43,12 +66,11 @@ def _exclusive_runtime_guard() -> Iterator[None]:
 
 def _run(cmd: list[str]) -> dict:
     p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-    return {
-        "cmd": cmd,
-        "rc": p.returncode,
-        "out": p.stdout[-2000:],
-        "err": p.stderr[-2000:],
-    }
+    failed = p.returncode != 0
+    n = autopilot_log_tail_chars(failed=failed)
+    out = p.stdout or ""
+    err = p.stderr or ""
+    return {"cmd": cmd, "rc": p.returncode, "out": out[-n:], "err": err[-n:]}
 
 
 def _append_ops(row: dict) -> None:
@@ -71,7 +93,7 @@ def _run_autopilot_pipeline(args: argparse.Namespace) -> None:
             ]
         )
 
-    # Align with make wiki-ci: wiki_compile, dedupe_runtime, templates, frontend_style, then Markdown gates (Makefile wiki-ci).
+    # Same ordering as Makefile wiki-ci after wiki-compile; VALIDATE_WIKI_ARGS matches wiki-validate/wiki-check/wiki-ci (claims/matrix run before lint/type gates).
     steps.extend(
         [
             [sys.executable, str(ROOT / "scripts" / "wiki_compiler.py")],
@@ -100,14 +122,21 @@ def _run_autopilot_pipeline(args: argparse.Namespace) -> None:
     )
 
     ts = datetime.now(timezone.utc).isoformat()
-    status = {"ts": ts, "ok": True, "steps": [], "soft_failures": [], "strict_stopped_early": False}
+    status = {
+        "ts": ts,
+        "ok": True,
+        "ci_parity": bool(args.ci_parity),
+        "steps": [],
+        "soft_failures": [],
+        "strict_stopped_early": False,
+    }
     for cmd in steps:
         r = _run(cmd)
         status["steps"].append(r)
         _append_ops({"ts": ts, **r})
         if r["rc"] != 0:
             script_name = Path(cmd[1]).name if len(cmd) > 1 else ""
-            soft = script_name in SOFT_FAIL_SCRIPTS
+            soft = script_name in SOFT_FAIL_SCRIPTS and not args.ci_parity
             if soft:
                 status["soft_failures"].append({"script": script_name, "rc": r["rc"]})
             else:
@@ -127,6 +156,11 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--strict", action="store_true", help="stop on first non-zero rc")
     ap.add_argument("--with-queue", action="store_true", help="scan raw/ and process queued ingestion before compile")
+    ap.add_argument(
+        "--ci-parity",
+        action="store_true",
+        help="treat lint_wiki, validate_human_text, and validate_external_links like make wiki-ci (no soft_failures)",
+    )
     args = ap.parse_args()
     with _exclusive_runtime_guard():
         _run_autopilot_pipeline(args)

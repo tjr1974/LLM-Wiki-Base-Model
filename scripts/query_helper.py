@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Keyword-style retrieval over compiled ``ai/runtime/chunk.min.ndjson`` rows.
+
+Implements the Karpathy LLM Wiki gist *query* step after ``make wiki-compile``.
+See ``schema/karpathy-llm-wiki-bridge.md`` for how that maps to other ``make`` targets.
+
+Retrieval is intentionally shallow (token overlap on chunk text). ``cf`` on hits is ``l`` because
+that score is not human-assigned evidence confidence; forks may wrap this with BM25 or vectors.
+"""
 from __future__ import annotations
 
 import argparse
@@ -58,12 +66,13 @@ def main() -> None:
         "q": args.question,
         "k": args.topk,
         "chunks_present": chunks_path.exists(),
+        "retrieval": "keyword_overlap",
         "hits": [
             {
                 "sid": r.get("sid"),
                 "cid": r.get("cid"),
                 "l": r.get("l"),
-                "cf": "m",
+                "cf": "l",
                 "ev": f"{r.get('sid')}:{r.get('cid')}",
                 "txt": r.get("t", ""),
                 "src": src.get(r.get("sid"), {}),

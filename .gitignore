@@ -54,6 +54,9 @@ ai/runtime/fork_delta_*.min.json
 ai/runtime/fork_delta_*.md
 ai/runtime/fork-delta*.json
 
+# Wiki Manager per-child fork-delta bundles (see schema/wiki-manager.md)
+ai/runtime/manager/
+
 # --- Autopilot runtime streams ---
 ai/runtime/.autopilot.runtime.lock
 ai/runtime/autopilot.ops.ndjson
@@ -79,6 +82,11 @@ raw/inbox/**
 # Merge / patch fallout
 *.orig
 *.rej
+
+# Optional local maintainer diagrams / screenshots at repo root (large binaries)
+/llm_wiki_*.png
+/llm_wiki_*.jpg
+/llm_wiki_*.jpeg
 
 # Optional local scratch at repo root only
 /scratch/

@@ -33,6 +33,7 @@ def test_autopilot_runs_and_writes_health():
     assert health.exists()
     assert gaps.exists()
     st = json.loads(status.read_text(encoding="utf-8"))
+    assert st.get("ci_parity") is False
     assert isinstance(st.get("soft_failures"), list)
     assert st.get("ok") is True
     assert st.get("strict_stopped_early") is False

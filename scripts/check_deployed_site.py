@@ -6,6 +6,8 @@ deploy. Minimal default probes avoid assuming optional routes (sitemap, synthesi
 
 Use **`--with-sitemap`** when the host publishes **`/sitemap.xml`**. **`--hub-index`** adds
 **`/synthesis/hub-index/`** when Hub export exists.
+
+Optional post-deploy smoke in fork README flows. See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

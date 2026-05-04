@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""SHA-256 inventory of release-facing rollup JSON (**``make wiki-release-manifest``**).
+
+See ``schema/karpathy-llm-wiki-bridge.md`` for fork export hygiene next to gist *lint* rollups.
+"""
 from __future__ import annotations
 
 import argparse

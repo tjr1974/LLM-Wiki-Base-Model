@@ -1,5 +1,11 @@
 # Upstreaming improvements from forks
 
+## LLM Wiki Manager as canonical toolchain home
+
+**LLM Wiki Manager** is the **default canonical checkout for ongoing shared tooling development** in this family. Full rules sit in **`schema/wiki-manager.md`** under **Canonical development hub**. **LLM Wiki Base Model** stays the **neutral sibling** used with **`COMPARE=`** and **`WIKI_MANAGER_COMPARE_ROOT`** and should receive **cherry-picked** neutral backports from **Manager** on a maintainer-defined cadence. It is **not** an unattended mirror. Domain child repos keep **`wiki/`** narrative local and still follow the **Parent-child alignment charter** below when you treat **Base Model** as the neutral parent of domain content.
+
+**Manager `wiki/` scope.** The **`wiki/`** tree in **LLM Wiki Manager** is **machine-first LLM context** for the family and may name **Base Model**, **Manager**, and each registered domain child with real paths and roles (**`wiki/synthesis/llm-wiki-family-repositories.md`**). **Human readability is not a goal** there. That does **not** relax the **Parent-child alignment charter** for what **Base Model** accepts as **domain-neutral** upstream merges from children.
+
 ## Parent-child alignment charter
 
 This base repository is the parent of domain forks such as **`Shaolin Monastery Research System`**.
@@ -27,9 +33,18 @@ Topic-specific forks inherit this scaffold then add ingestion, dashboards, disco
 - **Baked chrome refresh**: **`apply_global_nav_to_human_site.py`** plus **`human_site_nav.py`** (default vs legacy sidebars) normalize static HTML without rerunning full export (**`wiki-sync-nav`** targets in the **`Makefile`**).
 - **Deployed smoke**: **`check_deployed_site.py`** (generic **`WikiBaseDeploySmoke`** user-agent, minimal default probes, optional **`--with-sitemap`** / **`--hub-index`**).
 - **Ingest hygiene**: **`source_admissibility.py`** plus **`ai/schema/source_admissibility.v1.json`** (neutral blocklists). Forks extend **`allow_if_contains`** in JSON instead of hard-coding allow rules in scripts. **`tests/test_source_admissibility.py`** asserts **`_default_policy()`** stays identical to the checked-in JSON (**`pytest`** catches drift).
-- **Optional quality dashboard gate**: **`check_quality_gate.py`** ( **`make wiki-quality-gate`** and the tail of **`autopilot.py`** ) reads **`ai/runtime/quality_dashboard.min.json`** when present and writes **`quality_gate.min.json`**. Without a dashboard, the base scaffold **records a skip** (**`skipped_no_dashboard`**, exit **0**) so **`wiki-ci`** stays lean. Repeats of that skip reuse the existing file bytes when semantics match (timestamp-stable). Forks tighten with **`--require-dashboard`** alongside their dashboard builders (**`validate_quality_artifacts.py`** freshness checks remain fork-local unless generalized). **`make wiki-ci`** itself does **not** invoke this helper. **`make wiki-all`** and **`.github/workflows/ci.yml`** append **`wiki-quality-gate`** after **`wiki-ci`** so forks can delete that tail line in CI if they do not ship dashboards yet.
+- **Optional quality dashboard gate**: **`check_quality_gate.py`** ( **`make wiki-quality-gate`** and the tail of **`autopilot.py`** ) reads **`ai/runtime/quality_dashboard.min.json`** when present and writes **`quality_gate.min.json`**. Without a dashboard, the base scaffold **records a skip** (**`skipped_no_dashboard`**, exit **0**) so **`wiki-ci`** stays lean. Repeats of that skip reuse the existing file bytes when semantics match (timestamp-stable). Forks tighten with **`--require-dashboard`** alongside their dashboard builders (**`validate_quality_artifacts.py`** freshness checks remain fork-local unless generalized). **`make wiki-ci`** itself does **not** invoke this helper. **`make wiki-all`** ( **`wiki-test`** then **`wiki-ci`** then **`wiki-quality-gate`** ) and **`.github/workflows/ci.yml`** (same three stages in separate steps) append **`wiki-quality-gate`** after **`wiki-ci`** so forks can delete that tail line in CI if they do not ship dashboards yet.
+- **Corpus authoring triage**: **`schema/wiki-source-triage-protocol.md`**, **`prompts/wiki-corpus-authoring.txt`**, and **`scripts/find_sources_for_topic.py`** (**`make wiki-topic-sources`** refreshes **`ai/runtime/`** via **`wiki-compile`**. **`--repo-root`** matches other multi-tree tooling.) remain **topic-neutral**. Forks reuse the same flow with domain keywords and real article paths.
+- **Cursor rules (IDE agents)**: Optional committed **`.cursor/rules/*.mdc`** files (for example **`wiki-authoring.mdc`**, **`wiki-pipeline.mdc`**) restate Makefile gates for matching paths. Port upstream with **`.github/`** and **`README.md`** only when wording stays domain-neutral (**`schema/wiki-quickstart.md`** links them for operators).
+- **Toolchain issues**: Optional **`.github/ISSUE_TEMPLATE/wiki-toolchain.md`** gives contributors a neutral checklist for CI, **`Makefile`**, autopilot, or Cursor rule drift. Ship **`.github/ISSUE_TEMPLATE/config.yml`** with **`blank_issues_enabled: true`** so blank issues stay available. Keep gist pointers (**`schema/karpathy-llm-wiki-bridge.md`**, **`make wiki-log-tail`**) when those areas change.
+- **Typography glob parity**: **LLM Wiki Manager** ships a narrow default **`MD_GLOBS`** list in **`scripts/validate_human_text.py`** for **`wiki/`** (**`wiki/main.md`**, **`wiki/_templates/`**, **`wiki/sources/`**, **`wiki/synthesis/`** only). Forks that add reader-facing **`wiki/`** Markdown trees should extend **`MD_GLOBS`** and the matching **`validate_human_text.py`** bullet in **`schema/AGENTS.md`** in the same commit. **`tests/test_human_text_rules.py`** fails when **`MD_GLOBS`** and that bullet diverge. It also pins **`wiki/main.md`**, **`wiki/sources/`**, and **`wiki/_templates/`** so they cannot drop out quietly.
+- **LLM Wiki gist alignment**: **`schema/karpathy-llm-wiki-bridge.md`** stays topic-neutral. Extend it with more **`make`** targets or paths, not domain mission text. Optional **`wiki/synthesis/activity-log.md`** is for human session notes only. **`make wiki-log-tail`** prints the last five gist-style dated headings from that file without opening an editor.
 
 ## Comparing this base to a known downstream locally
+
+When using **LLM Wiki Manager** as a dedicated coordination checkout, **`make wiki-manager-list`** and **`make wiki-manager-fork-delta-full`** (see **`schema/wiki-manager.md`**) run the same fork-delta machinery for **each** registered child and write per-child bundles under **`ai/runtime/manager/<id>/`** without clobbering the default **`ai/runtime/fork_delta_*.min.json`** paths.
+
+When you change **`COMPARE=`**, **`--compare-root`**, or the registry layout, extend the tests listed under **`## Regression tests`** in **`schema/wiki-manager.md`**.
 
 Maintain a sibling checkout of any mature fork (for example **`Shaolin Monastery Research System`** on the same machine) and compare **subsystem-by-subsystem**. Never wholesale-merge the fork tree into this repo.
 
@@ -49,6 +64,8 @@ For a repeatable machine summary, run:
 ```bash
 make fork-delta CHILD="/absolute/path/to/Shaolin Monastery Research System"
 ```
+
+When this checkout is **LLM Wiki Manager** and the diff left side should be a sibling **LLM Wiki Base Model** tree, add **`COMPARE="/absolute/path/to/LLM Wiki Base Model"`** on the same **`make fork-delta`** or **`make fork-delta-full`** line (see **`schema/wiki-manager.md`**).
 
 This writes **`ai/runtime/fork_delta_report.min.json`** with:
 

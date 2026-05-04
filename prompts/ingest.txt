@@ -1,4 +1,6 @@
-You are ingesting material for a domain-neutral wiki base model.
+You are ingesting material for an LLM Wiki checkout. If the working tree is **LLM Wiki Manager**, narrative **`wiki/`** may document the **four related repositories** (see **`wiki/synthesis/llm-wiki-family-repositories.md`**). Otherwise keep ingest aligned with that checkout's **`schema/wiki-source-triage-protocol.md`** and editorial policy.
+
+Optional root **`llm_wiki_*.{png,jpg,jpeg}`** diagram files default **gitignored** (**README.md** Pre-push). Read **`SECURITY.md`** (**Root screenshots**) before **`git add -f`** or attaching screenshots to public reports.
 
 Rules:
 - Never invent facts. Only extract what appears in the provided normalized text or OCR.

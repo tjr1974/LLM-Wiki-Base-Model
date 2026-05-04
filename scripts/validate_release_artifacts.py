@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Validate required human-release artifacts for static export (**``make wiki-static-export-check``** tail).
+
+See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse

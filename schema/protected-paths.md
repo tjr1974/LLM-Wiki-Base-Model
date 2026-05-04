@@ -10,7 +10,7 @@ This scaffold ships **`human/templates/`** for an optional static export. **`hum
 
 Forks may add **`human/site/index.html`** for deployment mirrors. Declare that path protected in the fork if you reserve the homepage for humans.
 
-Sidebar and shared chrome SHOULD follow whatever nav sync story the fork adopts. Maintainers refresh baked **`human/site/**/index.html`** rails by editing **`scripts/human_site_nav.py`** then **`make wiki-sync-nav`** (**`scripts/apply_global_nav_to_human_site.py`** skips **`human/site/index.html`** unless **`wiki-sync-nav-all`**). **`make wiki-ci`** does not require a **`human/site/`** build. Forks that ship compiled HTML wire optional validators and **`make wiki-static-export-check`** (see **`schema/wiki-quickstart.md`** and **`schema/AGENTS.md`**).
+Sidebar and shared chrome SHOULD follow whatever nav sync story the fork adopts. Maintainers refresh baked **`human/site/**/index.html`** rails by editing **`scripts/human_site_nav.py`** then **`make wiki-sync-nav`** (**`scripts/apply_global_nav_to_human_site.py`** skips **`human/site/index.html`** unless **`wiki-sync-nav-all`**). **`make wiki-ci`** does not require a **`human/site/`** build. Forks that ship compiled HTML wire optional validators and **`make wiki-static-export-check`** (see **`schema/wiki-quickstart.md`**, **`schema/karpathy-llm-wiki-bridge.md`**, and **`schema/AGENTS.md`**).
 
 ---
 

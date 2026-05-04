@@ -8,6 +8,8 @@ Each checked page must contain ``data-wiki-rel=\"wiki/….md\"`` that matches th
 **`human_site_wiki_route.wiki_markdown_rel_from_export_url``**, and the Markdown file must exist under
 ``wiki/``. Graph ids (**``backlinks.min.json``**) omit the ``.md`` suffix; discovery normalizes attributes
 with **`wiki_graph_id_from_markdown_rel`**.
+
+Export fidelity for **``make wiki-wiki-rel``**. See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

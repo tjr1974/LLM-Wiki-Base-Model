@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Required HTML templates and assets versus ``human/template-registry.v1.json``.
+
+``make wiki-ci`` preflight before Markdown gates. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

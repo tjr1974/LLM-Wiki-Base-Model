@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Optional JSON write-back for answered queries (machine-side audit trail).
+
+Karpathy's LLM Wiki gist recommends filing good query answers into the persistent wiki
+so exploration compounds. This script records a compact JSON artifact under
+``ai/artifacts/query/`` (question, answer, sid:cid evidence, confidence, status) for
+forks that want durable query logs alongside or before narrative pages in ``wiki/``.
+See ``schema/karpathy-llm-wiki-bridge.md`` ("file the answer back" loop).
+"""
 from __future__ import annotations
 
 import argparse

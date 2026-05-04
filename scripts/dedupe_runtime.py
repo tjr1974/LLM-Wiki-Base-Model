@@ -4,6 +4,8 @@
 Uses optional host/path authority weights from ai/schema/source_authority.v1.json
 when choosing which SID to keep inside a canonical family group. Tie-break remains
 deterministic across environments (no corpus-specific boosts in base model forks).
+
+Runs immediately after ``wiki_compiler`` inside ``make wiki-compile``. See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

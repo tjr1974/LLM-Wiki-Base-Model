@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Compile ``wiki/**/*.md`` and ``normalized/`` into ``index/`` and ``ai/runtime/`` graphs.
+
+Refreshes the gist-style *content index* (``index/index.md``) and chunk metadata used by ``query_helper``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

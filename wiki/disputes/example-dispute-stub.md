@@ -22,7 +22,7 @@ What is the earliest well-attested claim for this topic?
 
 ## Open questions
 
-- Replace stub with real sources and independent citations per position.
+- *Maintenance:* Replace stub with real sources and independent citations per position.
 
 ## See also
 

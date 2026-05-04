@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Guard ``ingest.queue.ndjson`` for stuck error or queued rows (gist *ingest* lint).
+
+Runs under ``make wiki-ci``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import argparse

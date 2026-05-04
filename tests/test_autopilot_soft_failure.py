@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import builtins
 import importlib.util
 import json
 import sys
@@ -63,6 +64,49 @@ def test_autopilot_soft_failure_keeps_ok_true(monkeypatch: pytest.MonkeyPatch) -
     assert payload.get("strict_stopped_early") is False
     soft = payload.get("soft_failures") or []
     assert any(row.get("script") == "validate_human_text.py" and row.get("rc") == 1 for row in soft)
+
+
+def test_autopilot_ci_parity_makes_human_text_failure_hard(monkeypatch: pytest.MonkeyPatch) -> None:
+    """``--ci-parity`` maps typography to the same exit semantics as ``make wiki-ci``."""
+    ap = _load_autopilot()
+    real_run = ap._run
+
+    def patched(cmd: list[str]) -> dict:
+        if len(cmd) > 1 and Path(cmd[1]).name == "validate_human_text.py":
+            return {"cmd": cmd, "rc": 1, "out": "", "err": "simulated"}
+        return real_run(cmd)
+
+    monkeypatch.setattr(ap, "_run", patched)
+    monkeypatch.setattr(sys, "argv", ["autopilot", "--ci-parity"])
+
+    with pytest.raises(SystemExit) as excinfo:
+        ap.main()
+
+    assert excinfo.value.code == 1
+    payload = json.loads((ROOT / "ai" / "runtime" / "autopilot.status.json").read_text(encoding="utf-8"))
+    assert payload.get("ci_parity") is True
+    assert payload.get("ok") is False
+    assert not (payload.get("soft_failures") or [])
+
+
+def test_exclusive_runtime_guard_fallback_blocks_nested(monkeypatch: pytest.MonkeyPatch) -> None:
+    """When ``fcntl`` is absent, an exclusive create prevents concurrent ``ai/runtime`` writers."""
+    ap = _load_autopilot()
+    real_import = builtins.__import__
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "fcntl":
+            raise ImportError("simulated")
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    lock = ROOT / "ai" / "runtime" / ".autopilot.runtime.lock"
+    lock.unlink(missing_ok=True)
+    with ap._exclusive_runtime_guard():
+        with pytest.raises(RuntimeError, match="lock held"):
+            with ap._exclusive_runtime_guard():
+                pass
+    assert not lock.exists()
 
 
 def test_autopilot_hard_failure_strict_exits(monkeypatch: pytest.MonkeyPatch) -> None:

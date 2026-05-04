@@ -1,0 +1,124 @@
+# Corpus-first wiki authoring (LLM and agent prompt)
+
+Use this prompt when the task requires **maximum evidence coverage**, not quick touch-ups. It extends **`prompts/wiki-edit.txt`**. Resolve conflicts by applying the **stricter citation and honesty** requirement. Private maintainer notes stay outside any path listed in **`schema/protected-paths.md`**.
+
+**LLM Wiki Manager** hosts a **four-repo operator wiki** (see **`wiki/synthesis/llm-wiki-family-repositories.md`**) while this corpus workflow text stays **topic-neutral** so forks can reuse the same steps with their own keywords and sources. Forks supply topic scope, roadmaps, and corpora.
+
+**Ingest posture (Karpathy gist).** The gist favors **supervised** ingest (fewer sources per session, review between drops). Corpus passes here can still batch **`scripts/find_sources_for_topic.py`** rankings (**`make wiki-topic-sources`** chains **`wiki-compile`** first). Treat the ranked list as a queue and promote prose deliberately. For **batch automation** versus human-in-the-loop contrast, read **`schema/karpathy-llm-wiki-bridge.md`** (**Memex**, supervised versus batch).
+
+## How this prompt maps to the triage protocol
+
+**`schema/wiki-source-triage-protocol.md`** is the canonical narrative (Phases A-D). The numbered sequence below is the **same workflow** in imperative form for assistants: **Phase A** inventory, **Phase B** base selection, **Phase C** coverage matrix, **Phase D** composition then gates. Keep both documents aligned when you change either.
+
+## Session contract (once per corpus pass)
+
+State explicitly (in your session notes or PR text) before you draft:
+
+- **Target:** path under **`wiki/`**, article type (entity, synthesis, theme, dispute, chronology), and **scope boundary** (what you are *not* claiming this pass).
+- **Evidence bar:** **`schema/citation-spec.md`** plus **`schema/editorial-policy.md`**. Forks may require **`--strict-citation-meta`** via **`VALIDATE_WIKI_ARGS`** on **`make wiki-validate`**, **`make wiki-check`**, or **`make wiki-ci`**.
+- **Stop condition:** **`make wiki-check`** (Markdown-only) or **`make wiki-ci`** (adds templates, CSS, outbound URLs, readiness, ingest queue). For the same bar as **`.github/workflows/ci.yml`**, run **`make wiki-all`** (**`wiki-test`** restores **`ai/runtime/`** via **`wiki-restore-runtime`**, then **`wiki-ci`**, then **`wiki-quality-gate`**). Optional **`make wiki-analyze`** only after those gates - rollups, not substitutes.
+- **Forbidden shortcuts:** no fabricated **`[[sources/…]]`**, no silent merge of contradictions, no skipping **`wiki-compile`** before graph-backed steps (**`index/links.json`**, **`ai/runtime/backlinks.min.json`**), no mutating **`raw/`** (immutable upstream pipeline only).
+
+| Phase | Intent | Primary actions |
+|-------|--------|------------------|
+| **A** | Full candidate set | **`make wiki-topic-sources ARGS='…'`** (or compile + **`scripts/find_sources_for_topic.py`**), manual widening via peers and **`backlinks.min.json`** |
+| **B** | Compositional base | Rubric in **`wiki-source-triage-protocol.md`**. Record spine in YAML **`notes:`** or **`base_source_spine:`** when forks use it |
+| **C** | Gap visibility | Theme × source matrix before prose |
+| **D** | Author + index + gates | Draft, **`wiki/synthesis/sources.md`** index for new sources, **`make wiki-check`** or **`make wiki-ci`**. Optional **`make wiki-analyze`** after gates pass |
+
+## Pre-flight (before inventory)
+
+- **Index-first orientation.** Skim **`index/index.md`** and **`wiki/main.md`** so you do not miss hubs, themes, or disputes already in the tree (**`schema/karpathy-llm-wiki-bridge.md`**).
+- **Page contract.** Confirm the target path and YAML match **`schema/page-contracts.md`** (front matter keys, article shape) before you invest in a long merge pass.
+- **Categories and routing.** When forks assign **`wiki/categories/`** or hub placement, align with **`schema/category-taxonomy.md`** if that file is authoritative in the fork.
+- **Draft staging.** Some forks keep long work-in-progress under **`proposed/**/*.md`** (still typography-gated via **`MD_GLOBS`** in **`schema/AGENTS.md`**). Promote into **`wiki/`** when the narrative is ready for the same citation rules as articles.
+- **Evidence already in-tree.** This workflow assumes claims resolve to **`wiki/sources/<id>.md`** (and **`normalized/`** behind them). Use **`raw/`** only as immutable upstream input. Never let tooling mutate it (**`schema/AGENTS.md`**). If the corpus lacks a needed primary, **ingest first** (**`normalize_source.py`**, optional **`generate_source_wiki.py`** or hand-authored **`wiki/sources/`**, **`queue_ingest.py`**, then **`make wiki-compile`**) per **`schema/wiki-quickstart.md`**. Track external-only gaps in roadmap or ingest notes instead of inventing citations.
+- **Compile dedupe.** Each **`make wiki-compile`** runs **`wiki_compiler.py`** then **`dedupe_runtime.py`**. Dedupe merges duplicate ingest families using **`ai/schema/source_authority.v1.json`** (**`schema/karpathy-llm-wiki-bridge.md`**, **`schema/AGENTS.md`**). Reconcile citations if authority shifts change which **`[[sources/<id>#…]]`** labels stay canonical.
+- **New URLs and ingest policy.** When you add or cite net-new outbound URLs in source metadata, **`python3 scripts/source_admissibility.py --path '<slug>' [--url '<url>']`** checks fork policy (**`ai/schema/source_admissibility.v1.json`**). **`make wiki-admissibility-smoke`** runs one benign probe so the wiring stays alive. Heavy batch ingest: watch **`ai/runtime/ingest.queue.ndjson`**. **`make wiki-queue-health`** isolates **`validate_ingest_queue_health.py`** when **`make wiki-ci`** fails on queue caps.
+
+## Mandatory research and draft sequence
+
+Complete these steps **in order** after **pre-flight** and before you treat prose as draft-ready. **`Makefile`** passes flags via **`ARGS='…'`** (one shell-quoted string). Repeat **`--from-wiki`** for each seed page.
+
+1. **Phase A - Locate candidates (inventory).** Run **`make wiki-topic-sources ARGS='…'`** (refreshes graphs via **`wiki-compile`**) with **`--keywords`** from the article title and section plan. Pass **`--from-wiki`** once per reference page: the target article **and** neighboring hub, theme, synthesis, or entity pages that share the topic (the flag is **repeatable**). Raise **`--top`** when the corpus is large so the tail of the ranked table is still visible. For machine-readable rows (one JSON object per line), include **`--json`** inside **`ARGS='…'`** when calling **`make wiki-topic-sources`**, or run **`make wiki-compile`** then **`python3 scripts/find_sources_for_topic.py … --json`**. Use **`make wiki-compile`** then the script alone when you need finer control (**`--repo-root`** for a non-default checkout root). Use **`make wiki-topic-sources-no-compile`** only when **`ai/runtime/`** is already current. Treat stderr warnings about missing **`ai/runtime/backlinks.min.json`** as a signal to compile first. Manually widen the set with category indices and **`ai/runtime/backlinks.min.json`** toward **`[[sources/`** slugs peers already cite. The script is **discovery-only** and can miss low-keyword but canonical sources (**`schema/wiki-source-triage-protocol.md`**). After this compile, if dedupe collapsed ingest families, re-scan your candidate citations so **`[[sources/<id>#…]]`** targets still exist as canonical **`wiki/sources/<id>.md`** stems (**`scripts/wiki_paths.py`** resolution rules).
+2. **Optional bounded retrieval.** After **`wiki-compile`**, **`make wiki-query Q='…'`** (or **`python3 scripts/query_helper.py --json '…'`**) scores **`chunk.min.ndjson`** for focused questions. Check JSON **`chunks_present`**. Use this to surface chunk ids and phrasing hints, **not** as a substitute for reading source files when the article must be exhaustive.
+3. **Phase B - Rank and pick a base.** Compare candidates using the protocol rubric (scope fit, anchor granularity, narrative continuity, evidence type, cross-link load). Choose **exactly one** compositional base when one projection clearly dominates. If none dominate, compose from **egalitarian sections**, but still nominate the single longest cohesive spine in YAML **`notes:`** (optional fork convention **`base_source_spine:`**) or the session summary for auditors.
+4. **Phase C - Coverage matrix before drafting.** Build the theme-by-source matrix from the protocol (**rows:** required themes, **columns:** base plus serious alternates, **cells:** covered, partial, or absent with anchor ids). Log **coverage gaps** you intend to close in prose.
+5. **Phase D.1 - Outline from the base.** Mirror the base's argumentative or chronological scaffolding where it fits the **`wiki/`** article type (entity versus literature versus synthesis). Replace or shorten sections only when **`schema/editorial-policy.md`** demands (disputes layering, readability).
+6. **Phase D.2 - Systematic secondary pass.** Read every **other high-value** source fully enough to extract **additive** facts, chronology variants, disputed readings, persons, geographic precision, and similar fields. Update the matrix as you go.
+7. **Phase D.3 - Merge missing coverage.** Fold gaps into draft prose with **`[[sources/<source_id>#<anchor>]]`** on each claim line. Never merge contradictory claims silently: attribute per strand or use **`wiki/disputes/`** framing. Heading anchors in sources should follow the **`### anchor-id`** pattern expected by discovery heuristics when you can (**`scripts/find_sources_for_topic.py`** counts those anchors).
+8. **Phase D.4 - Sources index.** Every **`wiki/sources/*.md`** must appear exactly once under **`## Alphabetical index`** in **`wiki/synthesis/sources.md`** (**`validate_sources_category_index.py`** enforces order by YAML **`title`**). Add or fix entries in the same change set as new source files.
+9. **Phase D.5 - Graph and hub hygiene.** After substantive new cross-links, run **`make wiki-compile`** then **`make wiki-lint`** so **`index/links.json`** stays consistent with **`lint_wiki.py`**. When the fork uses hub rollups, consider **`make wiki-hub`** for **`wiki/synthesis/hub-index.md`** after large navigation edits (**`wiki-quickstart.md`**).
+10. **Phase D.6 - Max completeness within evidence.** Produce the richest article validators and roadmap allow, with no purposeful stub-shortening unless the article is explicitly flagged as scaffold pending ingest.
+
+## Writing rules (non-negotiable)
+
+- **`schema/editorial-policy.md`**, **`schema/citation-spec.md`**, typography for **`scripts/validate_human_text.py`**.
+- **Source ids.** Match citation **`[[sources/<id>#…]]`** basenames to **`wiki/sources/<id>.md`** (**`source_id:`** / **`sid:`** in YAML versus stems, **`manifest.json`** in **`normalized/`**). Shared resolution rules live in **`scripts/wiki_paths.py`** and **`schema/AGENTS.md`**.
+- **`schema/human-wiki-automation-boundary.md`**: scripts do not silently publish merged narrative. You author **`wiki/**/*.md`** explicitly.
+- **No fabricated `[[sources/...]]`**. Prefer more citations than uncited narration.
+- **Internal links.** Use stable **`[[…]]`** wikilinks relative to **`wiki/`** (for example **`[[main]]`**, **`[[entities/slug]]`**, **`[[themes/…]]`**, **`[[synthesis/…]]`**, **`[[disputes/…]]`**, **`[[chronology/…]]`**) that resolve after **`wiki-compile`**. Broken targets surface in graph-backed tooling (**`index/links.json`**, **`lint_wiki.py`**). Do not conflate that with **HTTP URL** checks in **`wiki-ci`**.
+- Fork policy on synthesis still applies. **Labeled** interpretation must tether to cited evidence bundles.
+
+## Faster feedback while drafting (optional)
+
+Use these **`Makefile`** targets between large edits so failures surface before a full **`make wiki-check`** (**`schema/wiki-quickstart.md`**, **`Makefile`** **`help`**):
+
+- **`make wiki-validate`**: **`wiki-compile`** then **`validate_wiki_front_matter.py`** and **`validate_wiki.py`** only (faster citation and YAML loop, skips sources index, claims rollups, **`lint_wiki`**, Typography). Forward **`VALIDATE_WIKI_ARGS`** the same way as **`wiki-check`** when bisecting **`--strict-citation-meta`** issues.
+- **`make wiki-lint`**: **`wiki-compile`** then **`lint_wiki.py`** (orphans and heuristic uncited bullets after link edits).
+- **`make wiki-text`**: Typography only (**`validate_human_text.py`**) without recompiling the graph.
+
+They **do not** replace **`make wiki-check`** or **`make wiki-ci`** before handoff.
+
+### Iterative gate rhythm
+
+| After you finish… | Run (in order) | Why |
+|-------------------|----------------|-----|
+| First full citation pass on the target page | **`make wiki-validate`** | Fast YAML + **`validate_wiki.py`** loop |
+| Adding many **`[[…]]`** wikilinks or new sections | **`make wiki-lint`** | Catches orphan pages and heuristic uncited bullets |
+| Long prose pass, typography-heavy | **`make wiki-text`** | **`MD_GLOBS`** typography without compile |
+| New **`wiki/sources/*.md`** files or edits to **`wiki/synthesis/sources.md`** | **`make wiki-check`** | **`validate_sources_category_index.py`**, claims rollups (**`build_claims.py`**, **`build_coverage_matrix.py`**), **`lint_wiki.py`**, and Typography all depend on the full narrative + index shape |
+| PR / CI parity before push | **`make wiki-ci`** or **`make wiki-all`** | **`wiki-ci`** matches the Markdown+chrome gate layer in CI. **`wiki-all`** adds **`pytest`** + runtime restore + **`wiki-quality-gate`** |
+| Batch **`autopilot.py`** / **`daemon.py`** without **`make`**, but typography, **`lint_wiki`**, and outbound links must hard-fail | **`python3 scripts/autopilot.py --ci-parity`** (optionally **`--with-queue`**) or **`python3 scripts/daemon.py --ci-parity …`** | Default autopilot records those three as **`soft_failures`**. **`--ci-parity`** matches **`make wiki-ci`** exit semantics (**`README.md`**, **`schema/wiki-quickstart.md`**, **`ai/runtime/autopilot.status.json`** field **`ci_parity`**) |
+
+## Closure checklist
+
+Prefer **`make wiki-check`**: **`wiki-compile`** (**`wiki_compiler.py`** then **`dedupe_runtime.py`**) then **`validate_wiki_front_matter.py`**, **`validate_wiki.py`**, **`validate_sources_category_index.py`**, **`build_claims.py`**, **`build_coverage_matrix.py`**, **`lint_wiki.py`**, and **`validate_human_text.py`** in **`Makefile`** order (**`schema/wiki-quickstart.md`**). Scripts below isolate a single failing gate.
+
+From repository root (adjust for fork targets). Run **`python3 scripts/wiki_compiler.py`** then **`python3 scripts/dedupe_runtime.py`** before steps that read **`index/links.json`** (same as **`make wiki-check`** prefix). Use this order when bisecting failures:
+
+- **`python3 scripts/validate_wiki_front_matter.py`**: YAML shape on **`wiki/**/*.md`**.
+- **`python3 scripts/validate_wiki.py`**: citations and confidence companions when required.
+- **`python3 scripts/validate_sources_category_index.py`**: **`wiki/synthesis/sources.md`** alphabetical index.
+- **`python3 scripts/build_claims.py`** and **`python3 scripts/build_coverage_matrix.py`**: claims rollup under **`ai/runtime/`** from narrative **`wiki/**/*.md`** (**`build_claims.py`** skips **`wiki/sources/`** and **`wiki/_templates/`**). **`build_coverage_matrix.py`** also writes **`ai/runtime/coverage_matrix.min.json`** and NDJSON rows under **`ai/artifacts/coverage/`**.
+- **`python3 scripts/lint_wiki.py`**: orphaned or heuristic uncited bullets. **Operator** **`wiki/synthesis/`** pages (paths, **`make`**, env) that are not source-backed claims should use **markdown tables** or non-`- ` structure so **`logs/lint/`** stays signal-heavy (**`karpathy-llm-wiki-bridge.md`** **Operator synthesis and `lint_wiki.py` claim bullets**).
+- **`python3 scripts/validate_human_text.py`**: typography on **`MD_GLOBS`** paths (**`schema/AGENTS.md`**).
+
+When reproducing **`make wiki-check`** or **`make wiki-ci`** failures on **`validate_wiki.py`**, pass the same extra flags **`make`** would forward (**`VALIDATE_WIKI_ARGS`**, for example **`--strict-citation-meta`**) when you rerun that step by hand (same argv convention as **`Makefile`** **`wiki-check`** / **`wiki-ci`**).
+
+Use **`make wiki-check`** for a minimal Markdown gate chain or **`make wiki-ci`** when templates, CSS, and outbound link policy must run. Forks that enforce **`--strict-citation-meta`** set **`VALIDATE_WIKI_ARGS`** on **`make wiki-validate`**, **`make wiki-check`**, or **`make wiki-ci`** or **export** it before **`autopilot.py`** / **`daemon.py`** (**`prompts/wiki-edit.txt`**, **`schema/wiki-quickstart.md`**). **`make wiki-analyze`** is rollup metrics only. Do not use it instead of **`wiki-ci`** or **`wiki-check`** when citations or Typography must hold (**`prompts/wiki-edit.txt`**).
+
+**Common `wiki-ci` friction (corpus-sized edits).**
+
+- **Templates, frontend, readiness.** **`wiki-ci`** runs **`validate_templates.py`** and **`validate_frontend_style.py`** before the Markdown gate chain, then **`validate_human_readiness.py`** (thresholds in **`ai/schema/human_readiness_policy.v1.json`**). Forks tighten thresholds there. Failures here are unrelated to citation graphs.
+- **Outbound URLs.** **`validate_external_links.py --strict`** follows links in **`wiki/**/*.md`**. Waivers: **`ai/schema/external_link_policy.v1.json`**. Air-gapped or daemon runs: **`--skip-probe`** or **`WIKI_EXTERNAL_LINKS_SKIP_PROBE`** (**`wiki-quickstart.md`**). Report security-sensitive URL or probe behavior per **`SECURITY.md`**.
+- **Root screenshots.** Optional **`llm_wiki_*.{png,jpg,jpeg}`** at the repository root stay **gitignored** by default (**README.md** Pre-push, **`.gitignore`**). Read **`SECURITY.md`** (**Root screenshots**) before **`git add -f`** or attaching images to public tickets.
+- **Ingest queue.** **`validate_ingest_queue_health.py`** reads **`ai/runtime/ingest.queue.ndjson`**. Triage with **`make wiki-queue-health`**. Pass **`--max-queued-rows`** when a backlog is deliberate.
+- **Citation metadata at scale.** **`make wiki-fix-citations-dry`** then **`make wiki-fix-citations`** (**`scripts/fix_citation_metadata.py`**) touches **non-source** narrative **`wiki/**/*.md`** only (skips **`wiki/sources/`** and **`wiki/_templates/`**). Use **human-reviewed** diffs. Never run unattended bulk prose.
+- **Hub rollup.** Optional **`make wiki-hub`** for **`wiki/synthesis/hub-index.md`** - same timing as **Phase D.5** when navigation changed a lot (**`wiki-quickstart.md`**).
+
+After **`make wiki-check`** (or **`make wiki-ci`**) succeeds, an optional **corpus hygiene** pass is **`make wiki-analyze`**: same **`wiki-compile`** prerequisite, then **`build_claims`**, **`build_coverage_matrix`**, **`detect_contradictions`**, **`extract_gaps`**, and **`build_health`** for **`ai/runtime/`** rollups. If rollups flag contradictions or domain-target gaps tied to your article, iterate prose or **`wiki/disputes/`** per **`editorial-policy.md`**, then re-run **`make wiki-check`** (or **`make wiki-ci`** if you need the full chrome layer) and **`make wiki-analyze`** again so **`claims.min.ndjson`**-backed signals stay current.
+
+**Rollup detail.** **`build_coverage_matrix.py`** and **`extract_gaps`** both resolve the newest **`ai/schema/domain_targets.vN.json`** by numeric **`N`**. **`detect_contradictions.py`** primarily consumes **`ai/runtime/claims.min.ndjson`** when that file exists, and may fall back to lighter page heuristics only when the file is **missing** and no claim-backed signals were emitted.
+
+Use **`make wiki-analyze`** to inspect contradictions and domain-target gaps **in addition to** gates, never as a replacement for **`validate_wiki.py`** or Typography.
+
+Same CI parity as **Session contract** above: **`make wiki-all`** runs **`wiki-test`** (**`pytest`** plus **`wiki-restore-runtime`**), then **`wiki-ci`**, then **`wiki-quality-gate`**. When **`ai/runtime/quality_dashboard.min.json`** is absent, **`check_quality_gate.py`** records **`skipped_no_dashboard`** (exit **0**) instead of failing the merge (**`wiki-quickstart.md`**, **`schema/fork-sync.md`**). **`wiki-ci`** remains the bar for narrative, citations, and export chrome on this scaffold.
+
+Optional maintainer habit after a large corpus pass. Append one parseable dated heading to **`wiki/synthesis/activity-log.md`** (for example **`## [YYYY-MM-DD] ingest | Short title`**). See **`schema/karpathy-llm-wiki-bridge.md`**. Inspect recent entries with **`make wiki-log-tail`**. This does not replace **`make wiki-compile`** or **`ai/runtime/`** queue logs.
+
+When a long research pass also answers a standalone question worth keeping, file the synthesis into **`wiki/`** with citations or use **`python3 scripts/writeback_artifact.py`** for a JSON audit trail under **`ai/artifacts/query/`** (see **`schema/karpathy-llm-wiki-bridge.md`**, **`prompts/wiki-edit.txt`**).
+
+## Canonical protocol doc
+
+Humans skim **`schema/wiki-source-triage-protocol.md`** for rationale and versioning. Prompt and protocol stay aligned when either changes.

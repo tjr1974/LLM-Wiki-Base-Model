@@ -13,9 +13,15 @@
 *.yaml text eol=lf
 *.yml text eol=lf
 Makefile text eol=lf
+scripts/githooks/pre-push text eol=lf
 .editorconfig text eol=lf
 .gitattributes text eol=lf
 .gitignore text eol=lf
 
 # Ship fonts as binary so Git does not normalize bytes.
 *.ttf binary
+
+# Raster images (site assets or optional root-level maintainer screenshots).
+*.png binary
+*.jpg binary
+*.jpeg binary

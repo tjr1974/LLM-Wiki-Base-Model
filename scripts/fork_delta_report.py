@@ -4,6 +4,11 @@
 The report is intentionally file-level (not semantic merge guidance). It helps
 maintainers quickly identify likely upstream candidates while preserving this
 base repository's domain-neutral posture.
+
+See **schema/karpathy-llm-wiki-bridge.md** (maintainer vocabulary) and
+**schema/wiki-manager.md** (optional **COMPARE=** and multi-child bundles).
+**## Regression tests** in **schema/wiki-manager.md** lists pytest files for
+**COMPARE=** and **--compare-root** behavior.
 """
 
 from __future__ import annotations
@@ -229,16 +234,31 @@ def _build_review_queue(report: dict, subsystem_weights: dict[str, int], review_
     return rows[:review_queue_max]
 
 
-def build_report(parent_root: Path, child_root: Path, policy_rel: str = DEFAULT_POLICY_REL) -> dict:
+def build_report(
+    parent_root: Path,
+    child_root: Path,
+    policy_rel: str = DEFAULT_POLICY_REL,
+    *,
+    policy_root: Path | None = None,
+) -> dict:
+    """Compare *parent_root* (upstream tree) against *child_root*.
+
+    When *policy_root* is set, fork-delta policy JSON is read from that tree
+    instead of *parent_root* (used by LLM Wiki Manager when artifacts live in
+    the manager checkout but the diff left side is a sibling base-model path).
+    """
+    if parent_root.resolve() == child_root.resolve():
+        raise ValueError("parent_root and child_root must differ (resolved to the same path)")
+    pr = policy_root if policy_root is not None else parent_root
     subsystems = {s.name: _analyze_subsystem(parent_root, child_root, s) for s in SUBSYSTEMS}
     single_files = [_analyze_single_file(parent_root, child_root, rel) for rel in SINGLE_FILES]
-    policy, policy_path, policy_loaded = _policy_hints(parent_root, policy_rel)
+    policy, policy_path, policy_loaded = _policy_hints(pr, policy_rel)
     hints = tuple(policy["domain_specific_hints"])
     report = {
         "v": 1,
         "parent_root": parent_root.as_posix(),
         "child_root": child_root.as_posix(),
-        "policy_path": safe_repo_rel(policy_path, parent_root),
+        "policy_path": safe_repo_rel(policy_path, pr),
         "policy_loaded": policy_loaded,
         "domain_specific_hint_count": len(hints),
         "ignore_path_glob_count": len(policy["ignore_path_globs"]),
@@ -262,6 +282,8 @@ def build_report(parent_root: Path, child_root: Path, policy_rel: str = DEFAULT_
         subsystem_weights=policy["subsystem_weights"],
         review_queue_max=int(policy["review_queue_max"]),
     )
+    if pr.resolve() != parent_root.resolve():
+        report["artifact_repo_root"] = pr.as_posix()
     report["counts"] = {
         "high_priority_upstream_paths": len(report["high_priority_upstream_paths"]),
         "child_only_generic_paths": len(report["child_only_generic_paths"]),
@@ -274,7 +296,16 @@ def build_report(parent_root: Path, child_root: Path, policy_rel: str = DEFAULT_
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", default="", help="Parent repository root. Defaults to this repository.")
+    ap.add_argument(
+        "--repo-root",
+        default="",
+        help="Repository root for policy JSON and report output. Defaults to this repository.",
+    )
+    ap.add_argument(
+        "--compare-root",
+        default="",
+        help="Optional upstream tree to diff against --child-root. Defaults to --repo-root (legacy behavior).",
+    )
     ap.add_argument("--child-root", required=True, help="Absolute path to child fork checkout.")
     ap.add_argument(
         "--policy",
@@ -291,17 +322,30 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    parent_root = resolve_repo_root(args.repo_root)
+    artifact_root = resolve_repo_root(args.repo_root)
+    compare_root = resolve_repo_root(args.compare_root) if str(args.compare_root).strip() else artifact_root
     child_root = Path(args.child_root).expanduser().resolve()
     if not child_root.exists():
         print(f"missing child root: {child_root}", file=sys.stderr)
         return 2
+    if not compare_root.exists():
+        print(f"missing compare root: {compare_root}", file=sys.stderr)
+        return 2
+    if compare_root.resolve() == child_root.resolve():
+        print("compare-root and child-root must differ (resolved to the same path)", file=sys.stderr)
+        return 2
 
-    report = build_report(parent_root=parent_root, child_root=child_root, policy_rel=args.policy)
-    out_path = (parent_root / args.out).resolve()
+    policy_root = artifact_root if artifact_root.resolve() != compare_root.resolve() else None
+    report = build_report(
+        parent_root=compare_root,
+        child_root=child_root,
+        policy_rel=args.policy,
+        policy_root=policy_root,
+    )
+    out_path = (artifact_root / args.out).resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    print(f"ok fork_delta_report out={safe_repo_rel(out_path, parent_root)}")
+    print(f"ok fork_delta_report out={safe_repo_rel(out_path, artifact_root)}")
     return 0
 
 

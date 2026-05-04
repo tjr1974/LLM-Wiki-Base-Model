@@ -4,13 +4,13 @@ This file is **for assistants** completing repository tasks as **explicit author
 
 **Authorship mandate.** Readable **`wiki/**/*.md`** article hubs and dispute narratives exist because **maintainers authored them or you rewrote them** under **`schema/editorial-policy.md`**, **`schema/citation-spec.md`**, and **`schema/human-wiki-automation-boundary.md`**.
 
-You are assisting on a **domain-neutral scaffold**. Respect fork-specific overlays when present. Defaults point at **`wiki/entities/example-entity.md`** as the minimal fully worked example linking into **`wiki/sources/example-stub.md`**.
+You are assisting on **LLM Wiki Manager**. **`wiki/`** here is **machine-first** for **LLMs** (not a human newspaper). Prefer **tables**, **short bullets**, **stable `##` anchors**, and **cross-refs**. **Cut filler** and repeated throat-clearing to save tokens. Family map: **`wiki/synthesis/llm-wiki-family-repositories.md`**. Full policy: **`schema/wiki-manager.md`** **Machine-first repository (LLM Wiki Manager)**. **`schema/`** and **`scripts/`** stay portable and topic-agnostic unless a task says otherwise. Respect fork-specific overlays when present. Defaults point at **`wiki/entities/example-entity.md`** as the validator fixture linking into **`wiki/sources/example-stub.md`**.
 
 Use **two passes** when useful.
 
 **Structural.** Fix organization headings scaffolding disputed topics splits and evidence placement per **`editorial-policy.md`**.
 
-**Line-edit.** Clarify wording tone definitions on first specialist term and citations that match **`citation-spec.md`**. Follow typography rules enforced by **`scripts/validate_human_text.py`** across tracked Markdown elsewhere in the repo.
+**Line-edit.** Clarify wording tone definitions on first specialist term and citations that match **`citation-spec.md`**. Follow typography rules enforced by **`scripts/validate_human_text.py`** (**`MD_GLOBS`** in that script, summarized in **`schema/AGENTS.md`**).
 
 **Editorial stance.** Each fork sets how far synthesis reaches. Until then keep stubs honest cite evidence with **`[[sources/<id>#<anchor>]]`** and never invent placeholder source identifiers.
 
@@ -18,8 +18,18 @@ Use **two passes** when useful.
 
 **Automation discipline.** Do not treat bulk scripted lists as finalized narrative. Promote stubs into prose with citations when the maintainer asks for readable output.
 
+**Exhaustive authoring mode.** When instructions require locating every relevant source, comparing projections for gaps, and maximizing article completeness, read **`prompts/wiki-corpus-authoring.txt`** and **`schema/wiki-source-triage-protocol.md`**, run **`make wiki-topic-sources ARGS='…'`** (runs **`wiki-compile`** then **`scripts/find_sources_for_topic.py`**). Use **`make wiki-topic-sources-no-compile ARGS='…'`** only when **`ai/runtime/`** graphs are already current. During long corpus edits, follow the **Session contract** and **Iterative gate rhythm** sections in **`prompts/wiki-corpus-authoring.txt`** (partial **`make wiki-validate`**, **`make wiki-lint`**, **`make wiki-text`** between drafts) so failures surface before a full **`make wiki-check`**.
+
+**Query answers that compound (Karpathy gist).** When a question produces a reusable comparison, analysis, or cross-source synthesis, **do not leave it only in chat**: add a cited page under the right **`wiki/`** subtree (often **`wiki/synthesis/`**) or extend an existing hub so the next session starts from prose plus **`[[sources/<id>#<anchor>]]`**. Optionally record a machine snapshot with **`python3 scripts/writeback_artifact.py`** (writes **`ai/artifacts/query/<qid>.json`**. See **`schema/karpathy-llm-wiki-bridge.md`**).
+
+**Index-first exploration (gist).** When you do not know which page to open, skim **`index/index.md`** and **`wiki/main.md`** before loading many articles (the gist's habit of reading the content index first, then drilling in). Use **`make wiki-query`** when scored chunks from **`ai/runtime/`** are enough.
+
+**Session chronicle (optional).** To mirror the [Karpathy LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) append-only log habit, append dated sections to **`wiki/synthesis/activity-log.md`** using the heading convention described there. **`make wiki-log-tail`** shows the last five dated headings without opening the file. **`schema/karpathy-llm-wiki-bridge.md`** explains how that complements **`index/index.md`** and **`ai/runtime/`** logs.
+
+**Operator synthesis pages.** On **LLM Wiki Manager**, **`wiki/synthesis/`** text that lists checkouts, **`make`** targets, or env wiring is usually **not** a set of encyclopedic source-backed bullets. Prefer **markdown tables** so **`lint_wiki.py`** **`logs/lint/`** stays signal-heavy. See **`karpathy-llm-wiki-bridge.md`** subsection **Operator synthesis and `lint_wiki.py` claim bullets**. Before **`git add -f`** on root **`llm_wiki_*`** images or pasting screenshots into public tickets, read **`SECURITY.md`** (**Root screenshots**).
+
 **Where to edit.** Treat **`wiki/**/*.md`** as narrative Markdown unless the task directs static HTML tweaks in a fork that ships **`human/site/`**.
 
-When graph refresh matters finish with **`python3 scripts/wiki_compiler.py`**. Before handing work back run **`make wiki-ci`** unless you skipped HTML or CSS (**`Makefile`** **`help`**). For Markdown-only scope **`make wiki-check`** is enough. Forks enforcing full confidence scaffolding on cited bullets may set **`VALIDATE_WIKI_ARGS=--strict-citation-meta`** for **`make wiki-ci`** (**`Makefile`** **`help`**). **`scripts/validate_wiki.py`** then aligns with **`autopilot.py`** and **`daemon.py`** when they inherit the environment.
+When graph refresh matters finish with **`make wiki-compile`** (**`wiki_compiler.py`** then **`dedupe_runtime.py`**). Before handing work back run **`make wiki-ci`** unless you skipped HTML or CSS (**`Makefile`** **`help`**). For Markdown-only scope **`make wiki-check`** is enough. **`make wiki-analyze`** is rollup metrics only (**`schema/wiki-quickstart.md`**). Do not trade it for **`wiki-ci`** or **`wiki-check`** when citations or Typography must pass. Forks enforcing full confidence scaffolding on cited bullets may set **`VALIDATE_WIKI_ARGS=--strict-citation-meta`** on **`make wiki-validate`**, **`make wiki-check`**, or **`make wiki-ci`** (**`Makefile`** **`help`**). **`scripts/validate_wiki.py`** then aligns with **`autopilot.py`** and **`daemon.py`** when they inherit the environment. When you batch through **`autopilot.py`** or **`daemon.py`** but need the same hard-failure semantics as **`make wiki-ci`** for **`lint_wiki.py`**, **`validate_human_text.py`**, and **`validate_external_links.py`**, pass **`--ci-parity`** (**`README.md`**, **`schema/wiki-quickstart.md`**).
 
-Run **`make wiki-all`** for parity with **`pytest`** and **`.github/workflows/ci.yml`**.
+Run **`make wiki-all`** for parity with **`.github/workflows/ci.yml`** (**`wiki-test`** restores **`ai/runtime/`** after **`pytest`**, then **`wiki-ci`**, then **`wiki-quality-gate`**).

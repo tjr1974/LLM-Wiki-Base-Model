@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Surface cross-page contradiction signals from compiled claims (gist *lint* rollup).
+
+Runs in the ``make wiki-analyze`` tail and related gates. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

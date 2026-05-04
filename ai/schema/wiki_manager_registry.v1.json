@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "compare_root_env": "WIKI_MANAGER_COMPARE_ROOT",
+  "description": "Machine-readable list of domain child wikis coordinated from this checkout. Set each path_env to an absolute path on the operator machine (see .env.example and schema/wiki-manager.md).",
+  "managed_children": [
+    {
+      "id": "shaolin-monastery-research-system",
+      "label": "Shaolin Monastery Research System",
+      "path_env": "WIKI_MANAGER_CHILD_SHAOLIN"
+    },
+    {
+      "id": "tai-pan-wiki",
+      "label": "Tai-Pan Wiki",
+      "path_env": "WIKI_MANAGER_CHILD_TAI_PAN"
+    }
+  ]
+}

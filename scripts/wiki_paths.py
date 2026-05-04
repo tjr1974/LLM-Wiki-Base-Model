@@ -1,4 +1,4 @@
-"""Repository root resolution."""
+"""Repository root resolution and small shared argv/env helpers for wiki tooling."""
 
 import os
 import re
@@ -7,9 +7,23 @@ from pathlib import Path
 
 
 def validate_wiki_argv_from_env() -> list[str]:
-    """Parse ``VALIDATE_WIKI_ARGS`` for ``scripts/validate_wiki.py`` (same semantics as the ``Makefile``)."""
+    """Parse ``VALIDATE_WIKI_ARGS`` for ``scripts/validate_wiki.py`` (``Makefile`` ``wiki-validate`` / ``wiki-check`` / ``wiki-ci``, ``autopilot.py``, ``daemon.py``)."""
     extra = os.environ.get("VALIDATE_WIKI_ARGS", "").strip()
     return shlex.split(extra) if extra else []
+
+
+def autopilot_log_tail_chars(*, failed: bool) -> int:
+    """Cap stored stdout/stderr tails for ``autopilot.py`` step records and ``daemon.py`` heartbeat JSON.
+
+    When ``AUTOPILOT_LOG_TAIL_CHARS`` is set to a base-10 integer, it applies to both success and failure
+    captures (clamped to ``256`` .. ``500_000``). Otherwise use ``2000`` on success and ``16000`` when
+    ``failed`` is true (non-zero subprocess exit).
+    """
+    raw = os.environ.get("AUTOPILOT_LOG_TAIL_CHARS", "").strip()
+    if raw.isdigit():
+        v = int(raw)
+        return min(max(v, 256), 500_000)
+    return 16_000 if failed else 2000
 
 
 def repo_root() -> Path:

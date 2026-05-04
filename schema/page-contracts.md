@@ -41,4 +41,4 @@ lang_primary: en | zh | mixed
 
 ## Navigation hubs (sparse scaffold)
 
-**`wiki/main.md`** is the default **`type: synthesis`** landing that links readers into stubs and authored articles **without inventing factual bullets**. Forks may replace routing text but should keep citations on domain pages (**`wiki-quickstart.md`**, **`citation-spec.md`**).
+**`wiki/main.md`** is the default **`type: synthesis`** landing that links readers into stubs and authored articles **without inventing factual bullets**. Forks may replace routing text but should keep citations on domain pages (**`wiki-quickstart.md`**, **`citation-spec.md`**, **`karpathy-llm-wiki-bridge.md`**).

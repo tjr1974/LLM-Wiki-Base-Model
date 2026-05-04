@@ -2,6 +2,8 @@
 """
 Create or update wiki/sources/<source_id>.md from a normalized bundle.
 
+Projects normalized evidence into ``wiki/sources`` (Karpathy gist *ingest* alongside ``normalize_source.py``). See ``schema/karpathy-llm-wiki-bridge.md``.
+
 Usage:
   python scripts/generate_source_wiki.py --normalized normalized/foo-book --title "Foo Book"
 """

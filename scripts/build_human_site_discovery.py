@@ -28,6 +28,8 @@ CI **`--check`** enforces **`url-paths.txt`**, **`meta.json`**, **`search-index.
 **``--skip-search-index``**: escape hatch (**not CI-safe before push**).
 
 Optional **`--backlinks-file`** (default **`ai/runtime/backlinks.min.json`**) overrides the runtime backlink graph used to build **`site-backlinks.min.json`**.
+
+Pairs compiled graphs with static routes (**``make wiki-discovery``** / **``make wiki-static-export-check``**). See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

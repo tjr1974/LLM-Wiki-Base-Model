@@ -4,6 +4,8 @@
 By default skips **`human/site/index.html`** because that path may mix protected body content with site
 chrome (**`schema/protected-paths.md`**). Use **`--include-main`** only when a maintainer intentionally
 refreshes the main page sidebar.
+
+Nav refresh for baked HTML (**``make wiki-sync-nav``**). See ``schema/karpathy-llm-wiki-bridge.md``.
 """
 
 from __future__ import annotations

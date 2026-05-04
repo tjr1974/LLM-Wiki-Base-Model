@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Basic a11y checks on exported ``human/site`` HTML (fork **``make wiki-a11y``** / static export gates).
+
+See ``schema/karpathy-llm-wiki-bridge.md`` for how export lint extends the gist *lint* story.
+"""
 from __future__ import annotations
 
 import argparse

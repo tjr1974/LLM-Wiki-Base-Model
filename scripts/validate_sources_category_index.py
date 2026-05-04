@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Ensure wiki/synthesis/sources.md lists every wiki/sources/*.md entry once and is sorted by title."""
+"""Ensure wiki/synthesis/sources.md lists every wiki/sources/*.md entry once and is sorted by title.
+
+Part of ``make wiki-check`` / ``make wiki-ci`` (gist *ingest* index hygiene). See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 
 from __future__ import annotations
 

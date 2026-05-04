@@ -4,6 +4,8 @@ This scaffold ships the **same narrative policy** downstream projects matured on
 
 This document states how that goal interacts with **structure**, **style**, **evidence**, and **original inquiry**. It complements **[citation-spec.md](citation-spec.md)**, **[human-wiki-automation-boundary.md](human-wiki-automation-boundary.md)** (what scripts may safely automate versus what must remain human or LLM-authored under policy), and **[AGENTS.md](AGENTS.md)**.
 
+**LLM Wiki Manager checkout.** **Voice** and **reader-facing polish** in this file target **domain child** human wikis. **`wiki/`** on **Manager** is **machine-first** per **`schema/wiki-manager.md`** and **`schema/human-wiki-automation-boundary.md`**. Prefer dense tables and bullets there instead of tuning for human readers. Evidence and citation rules still apply where **`citation-spec.md`** binds.
+
 **Document map.** The file opens with **Narrative wiki content requires a human or tasked LLM**, the **At-a-glance checklist**, and **Original research is welcome**. It continues through **Article structure** (structure, headings, titles, stubs), **Definitions and jargon**, **Evidence literacy**, **Voice and attribution**, **Names and romanization**, **Chronology and typography**, **Maintenance**, **Wikipedia-derived borrowings**, **Disputes**, **Authority**, **Synthesis and tooling**, **Titles**, **Evidence versus URLs**, **Validator quick fixes**, **Optional site checks**, and Related links.
 
 ---
@@ -28,7 +30,7 @@ Before you treat a narrative page as done, confirm the following:
 - **Citations**: Every substantive factual claim carries a resolvable `[[sources/<source_id>#<anchor_id>]]` link where the citation contract applies (see **[citation-spec.md](citation-spec.md)**). Pure navigation (`[[wiki/...]]` only) is not a substitute on claim lines.
 - **Layers**: Documented institutional history, traditional or hagiographic narrative, folklore, modern promotion, and media framing are **labeled** when they diverge so readers never meet a blurred stack.
 - **Disputes**: Material disagreements that change interpretation route to **`wiki/disputes/`** with citations per strand instead of single-voice hand-waving.
-- **Typography**: Running prose follows **`scripts/validate_human_text.py`** on covered paths (ASCII straight quotes, no em dash `—`, no semicolons in checked prose).
+- **Typography**: Match **`scripts/validate_human_text.py`** **`MD_GLOBS`** patterns (**`schema/AGENTS.md`** lists them with **`make wiki-check`** and **`make wiki-ci`**, both of which run **`validate_human_text.py`**). Use ASCII straight quotes, no em dash `—`, and no semicolons in checked prose.
 - **Tooling**: `python3 scripts/validate_wiki.py`, `python3 scripts/lint_wiki.py`, and `python3 scripts/validate_human_text.py` run clean for files you touched, when applicable.
 
 Optional but valuable: glossary-style clarity on first use for specialist terms, an honest **Limits** or **Open questions** section when the corpus thins out, an updated **`updated:`** front-matter date when the substance of the article changes, and (for **`human/site/`** template or compile-path work) **`python3 scripts/validate_human_accessibility.py`** per **Optional checks on compiled site output** below.
@@ -140,7 +142,7 @@ Exercise care:
 
 - **Era labeling**: Prefer **CE/BCE** in English prose unless quoting a source directly. Dynasty or reign labels are welcome when they orient readers (`Tang dynasty`, `Northern Wei`). Be careful with reign dates versus Julian/Gregorian or calendar conventions when sources disagree, and note uncertainty briefly.
 - **Approximate dates**: Mark approximations with *c.* or *circa* when sources give ranges or ambiguous reports.
-- **Machine-enforced typography (human prose)**: The repo lints curated human-facing paths with **`scripts/validate_human_text.py`**. Editors should adhere to:
+- **Machine-enforced typography (human prose)**: **`scripts/validate_human_text.py`** applies **`MD_GLOBS`** in that file (**`schema/AGENTS.md`** documents the toolchain for **`make wiki-check`** and **`make wiki-ci`**). Editors should adhere to:
 
   - **No em dash** (`—`) in surfaced prose (rephrase or split sentences).
   - **No semicolons** in running prose on linted Markdown lines (including the full-width `；`). Split into sentences, tighten with commas where clear, or use a list structure. Where the linter message mentions restructuring clauses, prefer periods and parallelism, not punctuation workarounds that violate other rules above.
@@ -159,7 +161,7 @@ Coverage outside the scripted globs still benefits from the same conventions for
 - **Stubs**: Mark thin pages clearly in **`notes`** or a short introductory sentence. Link outward to fuller articles or planned coverage pages rather than padding with unsupported generalities.
 - **Scope statements**: When the corpus lacks evidence for a plausible sub-topic, say so in one clause and point to ingestion goals or **`wiki/synthesis/`** hubs when useful.
 
-See **[wiki-quickstart.md](wiki-quickstart.md)** for path layout and **[category-taxonomy.md](category-taxonomy.md)** when adjusting categories consistently.
+See **[wiki-quickstart.md](wiki-quickstart.md)** for path layout, **[karpathy-llm-wiki-bridge.md](karpathy-llm-wiki-bridge.md)** when explaining gist-style ingest or logging versus this repo's gates, and **[category-taxonomy.md](category-taxonomy.md)** when adjusting categories consistently.
 
 ---
 
@@ -226,7 +228,7 @@ Prefer running **`python3 scripts/validate_wiki.py`**, **`python3 scripts/lint_w
 - **`validate_wiki.py`** reports a missing citation, bad `source_id`, or missing anchor: add a correct `[[sources/...]]` link, repair the slug or `<a id="...">` on the source page, or move the sentence into a navigation-only block when **[citation-spec.md](citation-spec.md)** allows it.
 - **Missing `confidence` companion**: Add `- confidence: high|medium|low` on the next nested line (or inline on the same bullet) unless your line matches a narrow exemption in citation-spec.
 - **`validate_human_text.py`**: Replace semicolons with sentence breaks. Replace em dashes with a period or a short rephrase. Use ASCII `"` and `'`. For scare quotes around a gloss, keep sentence punctuation **outside** the closing `"` unless you reproduce a verbatim extract.
-- **`lint_wiki.py`**: Treat findings as heuristics. Either attach a source link to the bullet or confirm the line is pure navigation or index material.
+- **`lint_wiki.py`**: Treat findings as heuristics. Either attach a source link to the bullet or confirm the line is pure navigation or index material. **Machine-first operator** pages under **`wiki/synthesis/`** (repo maps, env vars) often use **markdown tables** instead of long `- ` lines. See **`karpathy-llm-wiki-bridge.md`** subsection **Operator synthesis and `lint_wiki.py` claim bullets**.
 - **`validate_human_readiness.py`** (forks ship it downstream): Signals **whole-corpus** health (coverage pages citation counts dispute coverage narrative depth mandated canonical pages keyed in **`ai/schema/human_readiness_policy.v1.json`** such as **`wiki/entities/<hub-slug>.md`**). Writes **`ai/runtime/human_readiness.min.json`**. You mostly satisfy these gates by bringing individual articles up to standard. Optionally run **`python3 scripts/validate_human_readiness.py`** after sweeping edits or via **`autopilot.py`** / release tooling to see rollup status.
 
 ---
@@ -240,6 +242,7 @@ Template or pipeline edits that change **`human/site/`** may warrant **`python3 
 ## Related
 
 - **[wiki-quickstart.md](wiki-quickstart.md)**. Contributor orientation (paths, commands, templates).
+- **[karpathy-llm-wiki-bridge.md](karpathy-llm-wiki-bridge.md)**. Gist layers and operations mapped to this repository.
 - **[citation-spec.md](citation-spec.md)**. Evidence syntax, disputes pattern, validators.
 - **[human-wiki-automation-boundary.md](human-wiki-automation-boundary.md)**. Script-safe automation versus manual or LLM authorship for human-facing content.
 - **[category-taxonomy.md](category-taxonomy.md)**. Category tagging consistency.

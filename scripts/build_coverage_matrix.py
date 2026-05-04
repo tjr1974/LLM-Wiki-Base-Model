@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""Pair claims with chunk text and ``domain_targets`` rows (gist *lint* / coverage rollup).
+
+Runs inside ``make wiki-check`` after ``build_claims``. See ``schema/karpathy-llm-wiki-bridge.md``.
+"""
 from __future__ import annotations
 
 import json

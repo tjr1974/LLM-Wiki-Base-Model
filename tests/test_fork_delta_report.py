@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import json
 import importlib.util
+import shutil
 import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,6 +25,14 @@ def _load_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def test_build_report_raises_when_parent_equals_child(tmp_path: Path) -> None:
+    same = tmp_path / "same"
+    same.mkdir()
+    mod = _load_module()
+    with pytest.raises(ValueError, match="must differ"):
+        mod.build_report(same, same)
 
 
 def test_fork_delta_report_builds_candidate_lists(tmp_path: Path) -> None:
@@ -45,6 +56,93 @@ def test_fork_delta_report_builds_candidate_lists(tmp_path: Path) -> None:
     assert report["review_queue"][0]["path"] == "scripts/shared.py"
     assert report["counts"]["high_priority_upstream_paths"] >= 1
     assert report["counts"]["candidate_upstream_paths"] >= 1
+
+
+def test_fork_delta_report_policy_root_splits_from_compare_tree(tmp_path: Path) -> None:
+    compare = tmp_path / "upstream"
+    artifact = tmp_path / "mgr"
+    child = tmp_path / "child"
+    _write(compare / "scripts" / "shared.py", "print('u')\n")
+    _write(child / "scripts" / "shared.py", "print('c')\n")
+    _write(
+        artifact / "ai" / "schema" / "fork_delta_policy.v1.json",
+        (
+            '{"v":1,"domain_specific_hints":["foobar"],'
+            '"ignore_path_globs":[],"review_queue_max":3,'
+            '"subsystem_weights":{"scripts":99}}\n'
+        ),
+    )
+
+    mod = _load_module()
+    report = mod.build_report(compare, child, policy_root=artifact)
+
+    assert report["policy_loaded"] is True
+    assert report.get("artifact_repo_root") == artifact.resolve().as_posix()
+    assert "scripts/shared.py" in report["high_priority_upstream_paths"]
+    assert report["parent_root"] == compare.resolve().as_posix()
+
+
+def test_fork_delta_report_cli_rejects_identical_compare_and_child(tmp_path: Path) -> None:
+    same = tmp_path / "same"
+    same.mkdir()
+    (same / "scripts").mkdir(parents=True)
+    _write(same / "scripts" / "a.py", "x\n")
+    mgr = tmp_path / "mgr"
+    (mgr / "ai" / "schema").mkdir(parents=True, exist_ok=True)
+    shutil.copy(ROOT / "ai/schema/fork_delta_policy.v1.json", mgr / "ai/schema/fork_delta_policy.v1.json")
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "fork_delta_report.py"),
+            "--repo-root",
+            str(mgr),
+            "--compare-root",
+            str(same),
+            "--child-root",
+            str(same),
+            "--out",
+            "ai/runtime/fork_delta_report.min.json",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert r.returncode == 2
+    combined = (r.stdout + r.stderr).lower()
+    assert "must differ" in combined
+
+
+def test_fork_delta_report_cli_compare_root_writes_under_repo_root(tmp_path: Path) -> None:
+    compare = tmp_path / "compare"
+    mgr = tmp_path / "mgr"
+    child = tmp_path / "child"
+    _write(compare / "scripts" / "z.py", "1\n")
+    _write(child / "scripts" / "z.py", "2\n")
+    (mgr / "ai" / "schema").mkdir(parents=True, exist_ok=True)
+    shutil.copy(ROOT / "ai/schema/fork_delta_policy.v1.json", mgr / "ai/schema/fork_delta_policy.v1.json")
+    out_rel = "ai/runtime/manager/test-child/fork_delta_report.min.json"
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "fork_delta_report.py"),
+            "--repo-root",
+            str(mgr),
+            "--compare-root",
+            str(compare),
+            "--child-root",
+            str(child),
+            "--out",
+            out_rel,
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert r.returncode == 0, r.stdout + r.stderr
+    out_path = mgr / out_rel
+    assert out_path.is_file(), r.stderr
+    data = json.loads(out_path.read_text(encoding="utf-8"))
+    assert data["parent_root"] == compare.resolve().as_posix()
+    assert data.get("artifact_repo_root") == mgr.resolve().as_posix()
+    assert data["counts"]["high_priority_upstream_paths"] >= 1
 
 
 def test_fork_delta_report_honors_policy_file(tmp_path: Path) -> None:

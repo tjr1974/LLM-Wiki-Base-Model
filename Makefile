@@ -46,7 +46,7 @@ help:
 	@echo "make wiki-fix-citations      # fix_citation_metadata.py (review diff before commit)"
 	@echo "make wiki-admissibility-smoke # source_admissibility.py benign sample JSON line (exit 0)"
 	@echo "make wiki-wiki-rel           # validate_human_site_wiki_rel.py (fork export; needs url-paths.txt)"
-	@echo "make wiki-hub                # build_hub_links.py -> wiki/synthesis/hub-index.md (optional nav rollup)"
+	@echo "make wiki-hub                # build_hub_links.py -> wiki/synthesis/hub-index.md (optional rollup, .gitignore on LLM Wiki Manager, git add -f to commit curated hub)"
 	@echo 'make wiki-topic-sources ARGS="--keywords foo"  # wiki-compile then find_sources_for_topic.py'
 	@echo 'make wiki-topic-sources-no-compile ARGS="..."  # same script only; stale ai/runtime/backlinks risk'
 	@echo "make fork-delta CHILD='/abs/path/to/child'  # optional COMPARE='/abs/upstream' for sibling base-model diff left"

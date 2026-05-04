@@ -210,6 +210,16 @@ def test_makefile_help_wiki_check_echo_names_sources_category_gate() -> None:
     assert "lint_wiki" in hit and "validate_human_text" in hit
 
 
+def test_makefile_help_wiki_hub_echo_mentions_gitignore_policy() -> None:
+    """``make help`` should note hub-index output is gitignored on LLM Wiki Manager by default."""
+    lines = (ROOT / "Makefile").read_text(encoding="utf-8").splitlines()
+    hit = next(ln for ln in lines if "make wiki-hub" in ln and "@echo" in ln)
+    assert "build_hub_links.py" in hit
+    assert "hub-index.md" in hit
+    assert ".gitignore" in hit
+    assert "git add -f" in hit
+
+
 def test_makefile_help_wiki_ci_echo_lists_preflight_and_tail_gate_scripts() -> None:
     """``make help`` wiki-ci line should mirror template/CSS preflight plus link/readiness/queue gates."""
     lines = (ROOT / "Makefile").read_text(encoding="utf-8").splitlines()

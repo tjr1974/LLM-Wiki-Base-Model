@@ -115,6 +115,8 @@ Use **`make wiki-analyze`** to inspect contradictions and domain-target gaps **i
 
 Same CI parity as **Session contract** above: **`make wiki-all`** runs **`wiki-test`** (**`pytest`** plus **`wiki-restore-runtime`**), then **`wiki-ci`**, then **`wiki-quality-gate`**. When **`ai/runtime/quality_dashboard.min.json`** is absent, **`check_quality_gate.py`** records **`skipped_no_dashboard`** (exit **0**) instead of failing the merge (**`wiki-quickstart.md`**, **`schema/fork-sync.md`**). **`wiki-ci`** remains the bar for narrative, citations, and export chrome on this scaffold.
 
+**Pytest parity.** **`.github/workflows/ci.yml`** installs **`requirements.txt`** before **`make wiki-test`**. If **`pytest --version`** on your shell is older than that pin, use **`.venv`**, run **`.venv/bin/pip install -r requirements.txt`**, then **`PATH=".venv/bin:$PATH" make wiki-test`** or **`make wiki-all`**. See **README.md** (Pre-push) and **`schema/wiki-quickstart.md`** (**Pytest and CI**).
+
 Optional maintainer habit after a large corpus pass. Append one parseable dated heading to **`wiki/synthesis/activity-log.md`** (for example **`## [YYYY-MM-DD] ingest | Short title`**). See **`schema/karpathy-llm-wiki-bridge.md`**. Inspect recent entries with **`make wiki-log-tail`**. This does not replace **`make wiki-compile`** or **`ai/runtime/`** queue logs.
 
 When a long research pass also answers a standalone question worth keeping, file the synthesis into **`wiki/`** with citations or use **`python3 scripts/writeback_artifact.py`** for a JSON audit trail under **`ai/artifacts/query/`** (see **`schema/karpathy-llm-wiki-bridge.md`**, **`prompts/wiki-edit.txt`**).

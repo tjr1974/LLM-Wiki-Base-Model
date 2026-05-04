@@ -142,3 +142,22 @@ def test_body_bullet_still_flags_semicolon(tmp_path: Path, monkeypatch: pytest.M
     md.write_text("# X\n\n- This is prose; semicolon here\n", encoding="utf-8")
     issues = mod._scan_file(md)
     assert any(r.get("r") == "semicolon" for r in issues)
+
+
+def test_body_bullet_flags_fullwidth_semicolon(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    mod = _load_validate_human_text()
+    monkeypatch.setattr(mod, "ROOT", tmp_path)
+    wdir = tmp_path / "wiki"
+    wdir.mkdir(parents=True)
+    md = wdir / "bad-fw.md"
+    # U+FF1B fullwidth semicolon (must not appear in MD_GLOBS prose lines).
+    md.write_text("# X\n\n- Two clauses\uFF1B second starts here\n", encoding="utf-8")
+    issues = mod._scan_file(md)
+    assert any(r.get("r") == "semicolon" for r in issues)
+
+
+def test_violations_from_prose_segment_semicolon_message_stable() -> None:
+    mod = _load_validate_human_text()
+    vs = mod._violations_from_prose_segment("a;b")
+    assert vs and vs[0][0] == "semicolon"
+    assert "Semicolon" in vs[0][1] and "prose" in vs[0][1].lower()

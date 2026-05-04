@@ -10,7 +10,7 @@ Use **two passes** when useful.
 
 **Structural.** Fix organization headings scaffolding disputed topics splits and evidence placement per **`editorial-policy.md`**.
 
-**Line-edit.** Clarify wording tone definitions on first specialist term and citations that match **`citation-spec.md`**. Follow typography rules enforced by **`scripts/validate_human_text.py`** (**`MD_GLOBS`** in that script, summarized in **`schema/AGENTS.md`**).
+**Line-edit.** Clarify wording tone definitions on first specialist term and citations that match **`citation-spec.md`**. Follow typography rules enforced by **`scripts/validate_human_text.py`** (**`MD_GLOBS`** in that script, summarized in **`schema/AGENTS.md`**). Avoid semicolons in body lines (split with periods or list rows). Evidence **`- quote:`** lines may still contain semicolons inside the quoted excerpt.
 
 **Editorial stance.** Each fork sets how far synthesis reaches. Until then keep stubs honest cite evidence with **`[[sources/<id>#<anchor>]]`** and never invent placeholder source identifiers.
 

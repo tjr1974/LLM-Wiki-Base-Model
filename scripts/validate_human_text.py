@@ -5,6 +5,8 @@
 
 Also covers **`proposed/`**, **`schema/`**, **`prompts`**, **`README.md`**, **`SECURITY.md`**, and HTML under **`human/templates/`** or **`human/site/`**.
 
+**Semicolons.** Each Markdown body line and each HTML-derived prose blob is checked after stripping fenced blocks, YAML front matter, evidence-metadata bullets, and inline backticks. ASCII **U+003B** and fullwidth **U+FF1B** are rejected in that visible prose (split with periods, commas, dashes, or list rows). Evidence **`- quote:`** lines skip the rule so excerpts can still contain semicolons inside the quoted material.
+
 See **`schema/AGENTS.md`** (validate_human_text.py bullet). Writes **`ai/runtime/human_text_lint.ndjson`**.
 
 Runs in **`make wiki-check`** / **`make wiki-ci`** (gist *lint* typography slice). See **`schema/karpathy-llm-wiki-bridge.md`**.

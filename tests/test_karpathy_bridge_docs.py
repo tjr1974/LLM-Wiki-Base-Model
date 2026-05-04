@@ -454,6 +454,7 @@ def test_orientation_docs_remain_linked() -> None:
     assert "validate_human_text.py" in issue_tpl
     assert "MD_GLOBS" in issue_tpl
     assert "test_human_text_rules.py" in issue_tpl
+    assert "_violations_from_prose_segment" in issue_tpl
     assert "scripts/lint_wiki.py" in issue_tpl
     assert "test_lint_wiki.py" in issue_tpl
     assert "citation_heuristic_messages" in issue_tpl
@@ -497,6 +498,7 @@ def test_ingest_prompt_mentions_root_screenshot_hygiene() -> None:
 
 def test_wiki_edit_prompt_mentions_query_writeback() -> None:
     edit = (ROOT / "prompts" / "wiki-edit.txt").read_text(encoding="utf-8")
+    assert "Avoid semicolons" in edit
     assert "make wiki-test -q" in edit
     assert "**Pytest leg**" in edit
     assert "schema/AGENTS.md" in edit
@@ -556,7 +558,10 @@ def test_cursor_wiki_rules_files_present_and_scoped() -> None:
     assert "index/index.md" in a and "wiki/main.md" in a
     assert "wiki-toolchain.md" in a
     assert "config.yml" in a
+    assert "semicolons" in a.lower()
     p = pipeline.read_text(encoding="utf-8")
+    assert "_violations_from_prose_segment" in p
+    assert "U+FF1B" in p
     assert "make wiki-test -q" in p
     assert "proposed/README.md" in p
     assert "**Pytest leg**" in p

@@ -12,10 +12,12 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import datetime, timezone
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from wiki_paths import utc_now_iso  # noqa: E402
 WIKI = ROOT / "wiki"
 RUNTIME = ROOT / "ai" / "runtime"
 
@@ -251,7 +253,7 @@ def main() -> None:
 
     payload = {
         "v": 1,
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "ts": utc_now_iso(),
         "ok": ok,
         "metrics": {
             "non_source_pages": non_source_pages,

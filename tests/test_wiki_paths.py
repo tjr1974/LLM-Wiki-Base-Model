@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -87,3 +88,15 @@ def test_autopilot_log_tail_chars_clamps_minimum(monkeypatch: pytest.MonkeyPatch
 def test_autopilot_log_tail_chars_clamps_maximum(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "9999999")
     assert wiki_paths.autopilot_log_tail_chars(failed=False) == 500_000
+
+
+def test_utc_now_iso_uses_source_date_epoch(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "946684800")
+    assert wiki_paths.utc_now_iso() == datetime.fromtimestamp(946684800, tz=timezone.utc).isoformat()
+
+
+def test_utc_now_iso_invalid_epoch_falls_back_to_wall_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "not-a-number")
+    s = wiki_paths.utc_now_iso()
+    assert len(s) >= 19
+    assert s.endswith("+00:00") or s.endswith("Z")

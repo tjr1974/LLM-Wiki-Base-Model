@@ -7,10 +7,12 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import datetime, timezone
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from wiki_paths import utc_now_iso  # noqa: E402
 QUEUE = ROOT / "ai" / "runtime" / "ingest.queue.ndjson"
 OUT = ROOT / "ai" / "runtime" / "ingest_queue_health.min.json"
 
@@ -56,7 +58,7 @@ def main() -> None:
     ok = counts["error"] <= args.max_error_rows and counts["queued"] <= args.max_queued_rows
     payload = {
         "v": 1,
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "ts": utc_now_iso(),
         "ok": ok,
         "queue_exists": QUEUE.exists(),
         "total_rows": total,

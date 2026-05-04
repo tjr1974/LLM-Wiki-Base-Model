@@ -8,12 +8,11 @@ from __future__ import annotations
 import json
 import re
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from wiki_paths import domain_targets_schema_path, repo_root
+from wiki_paths import domain_targets_schema_path, repo_root, utc_now_iso
 
 ROOT = repo_root()
 OUT_ND = ROOT / "ai" / "runtime" / "claims.min.ndjson"
@@ -244,7 +243,7 @@ def _question_from_lines(lines: list[str]) -> str | None:
 def main() -> None:
     rows = []
     by_page = {}
-    ts = datetime.now(timezone.utc).isoformat()
+    ts = utc_now_iso()
     subject_aliases = _load_subject_aliases()
     period_pat = _period_pat()
 

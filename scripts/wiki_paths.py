@@ -3,7 +3,23 @@
 import os
 import re
 import shlex
+from datetime import datetime, timezone
 from pathlib import Path
+
+
+def utc_now_iso() -> str:
+    """UTC ISO-8601 timestamp for runtime JSON and NDJSON artifacts.
+
+    When ``SOURCE_DATE_EPOCH`` is set (reproducible builds), uses that Unix second
+    instead of wall-clock time so repeated runs can match committed snapshots.
+    """
+    raw = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+    if raw.isdigit():
+        try:
+            return datetime.fromtimestamp(int(raw), tz=timezone.utc).isoformat()
+        except (ValueError, OSError):
+            pass
+    return datetime.now(timezone.utc).isoformat()
 
 
 def validate_wiki_argv_from_env() -> list[str]:

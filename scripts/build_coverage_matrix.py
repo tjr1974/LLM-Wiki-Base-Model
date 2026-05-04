@@ -7,12 +7,11 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from wiki_paths import domain_targets_schema_path, repo_root
+from wiki_paths import domain_targets_schema_path, repo_root, utc_now_iso
 
 ROOT = repo_root()
 
@@ -49,6 +48,7 @@ def _status_for(count: int, cited_count: int) -> str:
 
 
 def main() -> None:
+    ts_run = utc_now_iso()
     rt = ROOT / "ai" / "runtime"
     schema = domain_targets_schema_path(ROOT)
     out_json = rt / "coverage_matrix.min.json"
@@ -77,7 +77,7 @@ def main() -> None:
             if status == "empty" and in_chunks:
                 status = "weak"
             row = {
-                "ts": datetime.now(timezone.utc).isoformat(),
+                "ts": ts_run,
                 "group": group,
                 "item": item,
                 "status": status,
@@ -94,7 +94,7 @@ def main() -> None:
 
     summary = {
         "v": 1,
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "ts": ts_run,
         "n": len(rows),
         "status_counts": {
             "empty": sum(1 for r in rows if r["status"] == "empty"),

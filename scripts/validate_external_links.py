@@ -13,10 +13,11 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from wiki_paths import utc_now_iso  # noqa: E402
 WIKI_DIR = ROOT / "wiki"
 OUT_NDJSON = ROOT / "ai" / "runtime" / "external_link_lint.ndjson"
 OUT_SUMMARY = ROOT / "ai" / "runtime" / "external_link_report.min.json"
@@ -129,7 +130,7 @@ def main() -> None:
 
     skip_probe = bool(args.skip_probe) or _env_skip_probe()
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = utc_now_iso()
     ua = "WikiBaseLinkValidator/1.0"
     source_map = _load_wiki_external_links()
     waived = _load_waived_urls()

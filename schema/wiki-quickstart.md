@@ -58,6 +58,8 @@ python3 scripts/validate_human_text.py
 
 **Drift guard.** **`tests/test_human_text_rules.py`** rejects commits that extend **`MD_GLOBS`** without updating the **`validate_human_text.py`** bullet in **`schema/AGENTS.md`**.
 
+**Reproducible runtime timestamps.** Export **`SOURCE_DATE_EPOCH`** as Unix seconds before **`make wiki-ci`** when you need stable **`ts`** fields in claim and rollup artifacts. **`scripts/wiki_paths.py`** **`utc_now_iso()`** reads that variable. **README.md** (tracked **`ai/runtime/`** snapshot notes) and **`schema/AGENTS.md`** (**`utc_now_iso()`** bullet) spell out which scripts honor it.
+
 **Screenshots at repo root.** Optional **`llm_wiki_*.{png,jpg,jpeg}`** files default **gitignored** (**README.md** Pre-push, **`.gitignore`**). Read **`SECURITY.md`** (**Root screenshots**) before **`git add -f`** or sharing images in public tickets.
 
 Forks may tighten prose contracts with **`python3 scripts/validate_wiki.py --strict-citation-meta`** (confidence lines on cited bullets). The base scaffold keeps default validation in **`make wiki-ci`** and still writes **`ai/runtime/citation_meta_report.min.json`**.

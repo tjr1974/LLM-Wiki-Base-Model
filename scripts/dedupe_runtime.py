@@ -11,10 +11,12 @@ Runs immediately after ``wiki_compiler`` inside ``make wiki-compile``. See ``sch
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from wiki_paths import utc_now_iso  # noqa: E402
 
 
 def _jsonl(path: Path):
@@ -121,7 +123,7 @@ def main() -> None:
 
     out = {
         "v": 1,
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "ts": utc_now_iso(),
         "src_before": len(src),
         "src_after": len(new_src),
         "chunk_after": len(new_chunks),

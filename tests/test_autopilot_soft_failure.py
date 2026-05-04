@@ -10,7 +10,10 @@ from pathlib import Path
 
 import pytest
 
+import wiki_paths
+
 ROOT = Path(__file__).resolve().parents[1]
+_NOTICE = wiki_paths.AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE
 
 
 def _load_autopilot():
@@ -22,7 +25,9 @@ def _load_autopilot():
     return mod
 
 
-def test_autopilot_strict_soft_still_marks_stopped_early(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_autopilot_strict_soft_still_marks_stopped_early(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     """With --strict, soft failure ends the step list. ok stays true but strict_stopped_early flags it."""
     ap = _load_autopilot()
     real_run = ap._run
@@ -37,13 +42,21 @@ def test_autopilot_strict_soft_still_marks_stopped_early(monkeypatch: pytest.Mon
 
     ap.main()
 
+    err = capsys.readouterr().err
+    assert _NOTICE in err
+    assert "validate_human_text.py" in err
+    assert "strict" in err.lower() and "early" in err.lower()
+    assert "make wiki-ci" in err or "--ci-parity" in err
+
     payload = json.loads((ROOT / "ai" / "runtime" / "autopilot.status.json").read_text(encoding="utf-8"))
     assert payload.get("ok") is True
     assert payload.get("strict_stopped_early") is True
     assert len(payload.get("steps") or []) < 20  # full autopilot stops before all steps when --strict hits a soft fail
 
 
-def test_autopilot_soft_failure_keeps_ok_true(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_autopilot_soft_failure_keeps_ok_true(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     """Simulated typography failure must not flip status.ok."""
     ap = _load_autopilot()
     real_run = ap._run
@@ -57,6 +70,11 @@ def test_autopilot_soft_failure_keeps_ok_true(monkeypatch: pytest.MonkeyPatch) -
     monkeypatch.setattr(sys, "argv", ["autopilot"])
 
     ap.main()
+
+    err = capsys.readouterr().err
+    assert _NOTICE in err
+    assert "validate_human_text.py" in err
+    assert "stopped early" not in err  # no --strict
 
     status = ROOT / "ai" / "runtime" / "autopilot.status.json"
     payload = json.loads(status.read_text(encoding="utf-8"))

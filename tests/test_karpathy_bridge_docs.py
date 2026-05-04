@@ -61,10 +61,14 @@ WIKI_CORPUS_AUTHORING_PROMPT_NEEDLES: frozenset[str] = frozenset(
         "wiki-fix-citations-dry",
         "wiki-log-tail",
         "wiki-restore-runtime",
+        "make wiki-test -q",
         "wiki-test",
         "--ci-parity",
         "wiki-source-triage-protocol.md",
         "wiki-quickstart.md",
+        "schema/AGENTS.md",
+        "Assistant preamble",
+        "**Pytest leg**",
         "wiki/main.md",
         "wiki/synthesis/activity-log.md",
         "wiki/synthesis/hub-index.md",
@@ -77,6 +81,31 @@ def test_karpathy_bridge_mentions_toolchain_issue_template() -> None:
     text = (ROOT / "schema" / "karpathy-llm-wiki-bridge.md").read_text(encoding="utf-8")
     assert "wiki-toolchain.md" in text
     assert "config.yml" in text
+    assert "make wiki-test -q" in text
+    assert "Assistant preamble" in text
+    assert "wiki-quickstart.md" in text and "Pytest and CI" in text
+    pl = text.index("**Pytest leg.**")
+    pl_chunk = text[pl : pl + 700]
+    assert "proposed/README.md" in pl_chunk
+    assert "schema/AGENTS.md" in pl_chunk
+    assert "tests/test_githooks_wiring.py" in pl_chunk
+    assert "tests/test_pipeline_step_order.py" in pl_chunk
+    assert "tests/test_karpathy_bridge_docs.py" in pl_chunk
+
+
+def test_schema_agents_githooks_bullet_links_pytest_leg_family() -> None:
+    agents = (ROOT / "schema" / "AGENTS.md").read_text(encoding="utf-8")
+    line = next(
+        ln
+        for ln in agents.splitlines()
+        if "scripts/githooks/pre-push" in ln and "WIKI_PRE_PUSH" in ln
+    )
+    assert "proposed/README.md" in line
+    assert "karpathy-llm-wiki-bridge.md" in line
+    assert "tests/test_githooks_wiring.py" in line
+    assert "tests/test_pipeline_step_order.py" in line
+    assert "tests/test_karpathy_bridge_docs.py" in line
+    assert "**Pytest leg**" in line
 
 
 def test_karpathy_bridge_mentions_multi_repo_wiki_manager() -> None:
@@ -159,6 +188,13 @@ def test_activity_log_stub_documents_convention() -> None:
 
 def test_root_agents_lists_bridge() -> None:
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    assert "make wiki-test -q" in agents
+    assert "**Pytest leg**" in agents
+    assert "schema/AGENTS.md" in agents
+    assert "proposed/README.md" in agents
+    assert "tests/test_githooks_wiring.py" in agents
+    assert "tests/test_pipeline_step_order.py" in agents
+    assert "tests/test_karpathy_bridge_docs.py" in agents
     assert "karpathy-llm-wiki-bridge.md" in agents
     assert GIST_HOST_PATH in agents
     assert "wiki-log-tail" in agents
@@ -216,6 +252,7 @@ def test_readme_pre_push_links_toolchain_issue_template() -> None:
     assert "config.yml" in chunk
     assert "SECURITY.md" in chunk
     assert "Root screenshots" in chunk
+    assert "make wiki-test -q" in chunk
 
 
 def test_github_issue_template_config_allows_blank_issues() -> None:
@@ -236,6 +273,15 @@ def test_readme_write_back_section_links_script_and_bridge() -> None:
 def test_orientation_docs_remain_linked() -> None:
     """Forks grep these paths. Keep Related lists and Makefile help wired."""
     quickstart = (ROOT / "schema" / "wiki-quickstart.md").read_text(encoding="utf-8")
+    q_py = quickstart.index("**Pytest and CI.**")
+    q_chunk = quickstart[q_py : q_py + 800]
+    assert "Assistant preamble" in q_chunk
+    assert "karpathy-llm-wiki-bridge.md" in q_chunk
+    assert "**Pytest leg**" in q_chunk
+    assert "proposed/README.md" in q_chunk
+    assert "schema/AGENTS.md" in q_chunk
+    assert "Makefile" in q_chunk and "make help" in q_chunk
+    assert "make wiki-test -q" in q_chunk
     assert "karpathy-llm-wiki-bridge.md" in quickstart
     assert "Screenshots at repo root" in quickstart
     assert "## Regression tests" in quickstart
@@ -279,6 +325,11 @@ def test_orientation_docs_remain_linked() -> None:
     assert "wiki-manager.md" in editorial
     assert "Operator synthesis and `lint_wiki.py` claim bullets" in editorial
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "Same cross-refs as" in readme
+    assert "tests/test_pipeline_step_order.py" in readme
+    assert "tests/test_karpathy_bridge_docs.py" in readme
+    assert "tests/test_githooks_wiring.py" in readme
+    assert "proposed/README.md" in readme
     assert "karpathy-llm-wiki-bridge.md" in readme
     assert "wiki-log-tail" in readme
     assert "wiki-toolchain.md" in readme
@@ -301,6 +352,15 @@ def test_orientation_docs_remain_linked() -> None:
     proposed_readme = (ROOT / "proposed" / "README.md").read_text(encoding="utf-8")
     assert "wiki-toolchain.md" in proposed_readme
     assert "config.yml" in proposed_readme
+    assert "Assistant preamble" in proposed_readme
+    assert "schema/wiki-quickstart.md" in proposed_readme
+    assert "schema/karpathy-llm-wiki-bridge.md" in proposed_readme
+    assert "schema/AGENTS.md" in proposed_readme
+    assert "make help" in proposed_readme
+    assert "tests/test_githooks_wiring.py" in proposed_readme
+    assert "tests/test_pipeline_step_order.py" in proposed_readme
+    assert "tests/test_karpathy_bridge_docs.py" in proposed_readme
+    assert "make wiki-test -q" in proposed_readme
     for rel in (
         "schema/citation-spec.md",
         "schema/editorial-policy.md",
@@ -314,6 +374,13 @@ def test_orientation_docs_remain_linked() -> None:
     ):
         assert "karpathy-llm-wiki-bridge.md" in (ROOT / rel).read_text(encoding="utf-8"), rel
     ci_yml = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert "make wiki-test -q" in ci_yml
+    assert "**Pytest leg**" in ci_yml
+    assert "proposed/README.md" in ci_yml
+    assert "schema/AGENTS.md" in ci_yml
+    assert "tests/test_githooks_wiring.py" in ci_yml
+    assert "tests/test_pipeline_step_order.py" in ci_yml
+    assert "tests/test_karpathy_bridge_docs.py" in ci_yml
     assert "wiki-log-tail" in ci_yml
     assert "make wiki-hub" in ci_yml
     assert "index drift" in ci_yml
@@ -325,6 +392,15 @@ def test_orientation_docs_remain_linked() -> None:
     assert "test_fork_delta_report.py" in ci_yml
     assert "test_make_fork_delta_compare.py" in ci_yml
     pr_tpl = (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8")
+    assert "make wiki-test -q" in pr_tpl
+    assert "Assistant preamble" in pr_tpl
+    assert "karpathy-llm-wiki-bridge.md" in pr_tpl
+    assert "proposed/README.md" in pr_tpl
+    assert "schema/AGENTS.md" in pr_tpl
+    assert "githooks bullet" in pr_tpl
+    assert "Regression pointers:" in pr_tpl
+    assert "tests/test_githooks_wiring.py" in pr_tpl
+    assert "scripts/githooks/README.md" in pr_tpl
     assert "wiki-log-tail" in pr_tpl
     assert "make wiki-hub" in pr_tpl
     assert "Operator note" in pr_tpl
@@ -341,6 +417,28 @@ def test_orientation_docs_remain_linked() -> None:
     assert "## Regression tests" in pr_tpl
     assert "wiki/synthesis" in pr_tpl
     issue_tpl = (ROOT / ".github" / "ISSUE_TEMPLATE" / "wiki-toolchain.md").read_text(encoding="utf-8")
+    assert "make wiki-test -q" in issue_tpl
+    assert "**Pytest leg**" in issue_tpl
+    assert "proposed/README.md" in issue_tpl
+    assert "Makefile" in issue_tpl and "top-of-file" in issue_tpl
+    assert "Assistant preamble" in issue_tpl
+    assert "githooks bullet" in issue_tpl
+    assert "If **`scripts/githooks/pre-push`**" in issue_tpl
+    hook_tail = issue_tpl[issue_tpl.index("If **`scripts/githooks/pre-push`**") :]
+    hook_tail = hook_tail[:900]
+    assert "make help" in hook_tail
+    assert "tests/test_pipeline_step_order.py" in hook_tail
+    assert "tests/test_karpathy_bridge_docs.py" in hook_tail
+    assert issue_tpl.count("proposed/README.md") >= 2
+    parity = issue_tpl.split("**Pytest and CI parity**", 1)[1]
+    assert "tests/test_pipeline_step_order.py" in parity[:1200]
+    assert "tests/test_karpathy_bridge_docs.py" in parity[:1200]
+    assert "tests/test_githooks_wiring.py" in parity[:1200]
+    assert "**`schema/AGENTS.md`** (githooks bullet)" in issue_tpl
+    assert "scripts/githooks/README.md" in issue_tpl
+    assert "test_makefile_help_wiki_test_echo_warns_no_extra_make_goals" in issue_tpl
+    assert "test_githooks_readme_documents_modes" in issue_tpl
+    assert "tests/test_githooks_wiring.py" in issue_tpl.split("**Pytest and CI parity**")[1][:900]
     assert "wiki-log-tail" in issue_tpl
     assert "make wiki-hub" in issue_tpl
     assert "hub-index.md" in issue_tpl
@@ -388,6 +486,10 @@ def test_wiki_quickstart_read_first_lists_bridge() -> None:
 
 def test_ingest_prompt_mentions_root_screenshot_hygiene() -> None:
     text = (ROOT / "prompts" / "ingest.txt").read_text(encoding="utf-8")
+    assert "make wiki-test -q" in text
+    assert "**Pytest leg**" in text
+    assert "schema/AGENTS.md" in text
+    assert "proposed/README.md" in text
     assert "llm_wiki_" in text
     assert "SECURITY.md" in text
     assert "Root screenshots" in text
@@ -395,6 +497,10 @@ def test_ingest_prompt_mentions_root_screenshot_hygiene() -> None:
 
 def test_wiki_edit_prompt_mentions_query_writeback() -> None:
     edit = (ROOT / "prompts" / "wiki-edit.txt").read_text(encoding="utf-8")
+    assert "make wiki-test -q" in edit
+    assert "**Pytest leg**" in edit
+    assert "schema/AGENTS.md" in edit
+    assert "proposed/README.md" in edit
     assert "writeback_artifact.py" in edit
     assert "ai/artifacts/query" in edit
     assert "wiki-log-tail" in edit
@@ -434,6 +540,14 @@ def test_cursor_wiki_rules_files_present_and_scoped() -> None:
         assert "globs:" in head, path
         assert "alwaysApply:" in head, path
     a = authoring.read_text(encoding="utf-8")
+    assert "make wiki-test -q" in a
+    assert "proposed/README.md" in a
+    assert "**Pytest leg**" in a
+    assert "**`schema/AGENTS.md`** (githooks bullet)" in a
+    assert "tests/test_pipeline_step_order.py" in a
+    assert "tests/test_karpathy_bridge_docs.py" in a
+    assert "tests/test_githooks_wiring.py" in a
+    assert "scripts/githooks/README.md" in a
     assert "human-wiki-automation-boundary.md" in a
     assert "Operator synthesis and `lint_wiki.py` claim bullets" in a
     assert "Root screenshots" in a
@@ -443,6 +557,18 @@ def test_cursor_wiki_rules_files_present_and_scoped() -> None:
     assert "wiki-toolchain.md" in a
     assert "config.yml" in a
     p = pipeline.read_text(encoding="utf-8")
+    assert "make wiki-test -q" in p
+    assert "proposed/README.md" in p
+    assert "**Pytest leg**" in p
+    assert "**`schema/AGENTS.md`** (githooks bullet)" in p
+    assert "test_makefile_help_wiki_test_echo_warns_no_extra_make_goals" in p
+    assert "test_readme_pre_push_links_toolchain_issue_template" in p
+    assert "test_githooks_readme_documents_modes" in p
+    opt = p[p.index("Optional pre-push hooks") : p.index("Optional pre-push hooks") + 950]
+    assert "make help" in opt
+    assert "tests/test_pipeline_step_order.py" in opt
+    assert "tests/test_karpathy_bridge_docs.py" in opt
+    assert "scripts/githooks/README.md" in p
     assert "scripts/lint_wiki.py" in p
     assert "tests/test_lint_wiki.py" in p
     assert "Operator synthesis and `lint_wiki.py` claim bullets" in p

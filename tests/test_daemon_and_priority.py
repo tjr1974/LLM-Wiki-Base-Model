@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import wiki_paths
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -13,6 +15,17 @@ def test_daemon_invokes_autopilot_with_queue() -> None:
     text = (ROOT / "scripts" / "daemon.py").read_text(encoding="utf-8")
     assert "autopilot.py" in text and "--with-queue" in text
     assert "--ci-parity" in text and "ci_parity" in text
+
+
+def test_daemon_soft_failure_probe_matches_autopilot_stderr_notice() -> None:
+    """Literal lives in ``wiki_paths.py``. ``autopilot.py`` / ``daemon.py`` reference ``AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE``."""
+    needle = wiki_paths.AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE
+    wp_src = (ROOT / "scripts" / "wiki_paths.py").read_text(encoding="utf-8")
+    assert needle in wp_src
+    auto = (ROOT / "scripts" / "autopilot.py").read_text(encoding="utf-8")
+    dae = (ROOT / "scripts" / "daemon.py").read_text(encoding="utf-8")
+    assert "AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE" in auto
+    assert "AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE" in dae
 
 
 def _jsonl(path: Path):

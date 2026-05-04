@@ -66,6 +66,27 @@ RAW_DIR = "raw"
 NORMALIZED_DIR = "normalized"
 INDEX_DIR = "index"
 
+# Substring ``autopilot.py`` prints to stderr when soft-failure scripts exit non-zero
+# without ``--ci-parity``. ``daemon.py`` probes captured autopilot stderr for the same text.
+AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE = "soft_failures recorded while ok remains true"
+
+# Minimum heartbeat ``err`` tail (``daemon.py``) so leading toolchain stderr cannot push the
+# soft-failure notice out of the captured suffix when ``AUTOPILOT_LOG_TAIL_CHARS`` is tiny.
+AUTOPILOT_DAEMON_STDERR_TAIL_MIN = 4096
+
+
+def autopilot_daemon_stderr_tail_chars(*, failed: bool) -> int:
+    """Stderr tail size for ``daemon.py`` heartbeat ``err`` after each ``autopilot.py`` run.
+
+    ``AUTOPILOT_LOG_TAIL_CHARS`` can be set very low for stdout discipline. Autopilot may print
+    other **stderr** lines before the soft-failure notice, so we floor at
+    ``AUTOPILOT_DAEMON_STDERR_TAIL_MIN`` in addition to ``len(AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE) + 200``
+    so substring detection stays reliable without storing the entire stream when ``base`` is already large.
+    """
+    base = autopilot_log_tail_chars(failed=failed)
+    notice_floor = len(AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE) + 200
+    return max(base, notice_floor, AUTOPILOT_DAEMON_STDERR_TAIL_MIN)
+
 
 def wiki_source_yaml_id(fm: dict, file_stem: str) -> str:
     """Stable id from ``wiki/sources/*.md`` YAML (``source_id`` then ``sid``), else Markdown file stem."""

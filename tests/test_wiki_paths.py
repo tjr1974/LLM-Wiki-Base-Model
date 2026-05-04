@@ -9,6 +9,49 @@ import pytest
 import wiki_paths
 
 
+def test_autopilot_soft_failure_stderr_notice_stable() -> None:
+    """Single source of truth for autopilot/daemon soft-failure stderr probing."""
+    assert wiki_paths.AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE == "soft_failures recorded while ok remains true"
+    assert wiki_paths.AUTOPILOT_DAEMON_STDERR_TAIL_MIN == 4096
+    src = (Path(__file__).resolve().parents[1] / "scripts" / "wiki_paths.py").read_text(encoding="utf-8")
+    assert "AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE" in src
+    assert "AUTOPILOT_DAEMON_STDERR_TAIL_MIN" in src
+
+
+def test_autopilot_daemon_stderr_tail_floors_below_default_success_tail(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``AUTOPILOT_LOG_TAIL_CHARS`` can be 256. Daemon stderr tail still floors at ``AUTOPILOT_DAEMON_STDERR_TAIL_MIN``."""
+    monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "256")
+    assert wiki_paths.autopilot_log_tail_chars(failed=False) == 256
+    dae = wiki_paths.autopilot_daemon_stderr_tail_chars(failed=False)
+    assert dae == wiki_paths.AUTOPILOT_DAEMON_STDERR_TAIL_MIN
+
+
+def test_autopilot_daemon_stderr_tail_matches_log_tail_when_large(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "5000")
+    assert wiki_paths.autopilot_daemon_stderr_tail_chars(failed=False) == wiki_paths.autopilot_log_tail_chars(
+        failed=False
+    )
+
+
+def test_daemon_style_err_slice_keeps_soft_notice_with_tiny_env_tail(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Simulate ``daemon._run_once`` stderr truncation when env requests a tiny tail."""
+    notice = wiki_paths.AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE
+    err = ("x" * 5000) + f"autopilot: {notice}: lint_wiki.py.\n"
+    monkeypatch.setenv("AUTOPILOT_LOG_TAIL_CHARS", "256")
+    n = wiki_paths.autopilot_log_tail_chars(failed=False)
+    n_err = wiki_paths.autopilot_daemon_stderr_tail_chars(failed=False)
+    assert n == 256
+    assert n_err == wiki_paths.AUTOPILOT_DAEMON_STDERR_TAIL_MIN
+    assert notice not in err[-24:]
+    assert notice in err[-n_err:]
+
+
 def test_domain_targets_schema_path_picks_highest_version(tmp_path: Path) -> None:
     sd = tmp_path / "ai" / "schema"
     sd.mkdir(parents=True)

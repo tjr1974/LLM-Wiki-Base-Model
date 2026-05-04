@@ -21,6 +21,9 @@ coverage.xml
 .env
 .env.*
 !.env.example
+# direnv: local env hooks often export secrets or absolute paths (see README: never commit .env)
+.envrc
+.direnv/
 
 # --- OS / editor ---
 .DS_Store
@@ -28,6 +31,10 @@ Thumbs.db
 *~
 *.swp
 *.swo
+*.bak
+
+# Jupyter (local notebooks or ad-hoc analysis beside the repo)
+.ipynb_checkpoints/
 
 # Cursor: ignore local workspace files; un-ignore `rules/` when sharing team guidance
 # (Git ignores children of an excluded parent unless each parent is re-included.)

@@ -2,6 +2,7 @@
 #
 # Forks may set VALIDATE_WIKI_ARGS='--strict-citation-meta' for Makefile wiki-validate wiki-check wiki-ci targets (or export before autopilot or daemon).
 # Filing (optional): .github/ISSUE_TEMPLATE/wiki-toolchain.md for suspected CI or Makefile drift (README Pre-push). .github/ISSUE_TEMPLATE/config.yml allows blank GitHub issues.
+# wiki-test: never run "make wiki-test -q" (-q is a bogus make goal). README Pre-push, Assistant preamble table, schema/wiki-quickstart.md Pytest and CI, schema/karpathy-llm-wiki-bridge.md Pytest leg, proposed/README.md, schema/AGENTS.md githooks bullet, scripts/githooks/README.md, make help, tests/test_githooks_wiring.py tests/test_pipeline_step_order.py tests/test_karpathy_bridge_docs.py.
 
 VALIDATE_WIKI_ARGS ?=
 # Space-separated keywords passed to query_helper (example: make wiki-query Q='example entity').
@@ -64,6 +65,7 @@ help:
 	@echo 'make wiki-manager-fork-delta-full WIKI_MANAGER_ARGS="--dry-run"  # per-child bundles under ai/runtime/manager/<id>/'
 	@echo "make wiki-all       # wiki-test + wiki-ci + wiki-quality-gate (wiki-test: pytest + wiki-restore-runtime)"
 	@echo "make wiki-test      # pytest -q then wiki-restore-runtime (fast loop; leaves ai/runtime/ matching HEAD)"
+	@echo '  (wiki-test: no extra make goals after the target—e.g. make wiki-test -q is invalid; README Pre-push; tests/test_githooks_wiring.py tests/test_pipeline_step_order.py)'
 	@echo "make wiki-restore-runtime  # git checkout -- ai/runtime/ (drop timestamp-only test/gate churn)"
 	@echo "  (autopilot: python3 scripts/autopilot.py [--with-queue] [--ci-parity] [--strict]; --ci-parity hard-fails lint_wiki, validate_human_text, validate_external_links like make wiki-ci)"
 	@echo "  (daemon: python3 scripts/daemon.py [--ci-parity] [--strict] … forwards flags to autopilot each cycle)"

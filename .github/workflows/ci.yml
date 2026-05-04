@@ -31,7 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # First leg of **`make wiki-all`**: **`wiki-test`** (**`pytest`** then **`wiki-restore-runtime`**), matching how local **`make wiki-all`** resets **`ai/runtime/`** before **`wiki-ci`**.
+      # First leg of **`make wiki-all`**: **`wiki-test`** (**`pytest`** then **`wiki-restore-runtime`**), matching how local **`make wiki-all`** resets **`ai/runtime/`** before **`wiki-ci`**. Do not confuse with **`make wiki-test -q`** (invalid **`make`** invocation. **README.md** Pre-push, **Assistant preamble → repo mechanics** table, **`proposed/README.md`**, **`schema/wiki-quickstart.md`** **Pytest and CI**, **`schema/karpathy-llm-wiki-bridge.md`** **Pytest leg**, **`schema/AGENTS.md`** githooks bullet, **`Makefile`** top comments, **`make help`**, **`tests/test_githooks_wiring.py`**, **`tests/test_pipeline_step_order.py`**, **`tests/test_karpathy_bridge_docs.py`**).
       # **`tests/test_human_text_rules.py::test_schema_agents_documents_each_md_glob`** keeps **`schema/AGENTS.md`** aligned with **`MD_GLOBS`** in **`scripts/validate_human_text.py`**.
       # **`tests/test_pipeline_step_order.py`** keeps **`make wiki-ci`**, **`_wiki-md-core-gates`**, **`autopilot.py`**, **`schema/AGENTS.md`**, **`README`**, **`wiki-quickstart`**, and **`prompts/wiki-corpus-authoring.txt`** pipeline wording aligned (Markdown core gates include **`build_claims`** / **`build_coverage_matrix`** so **`ai/runtime`** stays consistent with validated wiki).
       - name: Run unit tests (make wiki-test)

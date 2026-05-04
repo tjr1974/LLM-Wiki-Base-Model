@@ -85,6 +85,7 @@ Karpathy's informal **lint** list (contradictions, stale or superseded claims, o
 - Explicit **contradiction** and **gap** rollups instead of only ad hoc LLM lint.
 - **Dedupe and authority** over duplicate ingest families (**`dedupe_runtime.py`**, **`ai/schema/source_authority.v1.json`**).
 - **CI-shaped gates** (`**make wiki-ci**`, **`autopilot.py`**, **`daemon.py`**) so "lint" is reproducible, not only a chat instruction. Optional **`autopilot.py --ci-parity`** (and **`daemon.py --ci-parity`**) align **`lint_wiki.py`**, Typography, and strict outbound links with **`make wiki-ci`** instead of **`soft_failures`**.
+- **Soft-failure visibility.** Default **`autopilot.py`** prints **stderr** when **`soft_failures`** is non-empty while **`ok`** stays true. **`daemon.py`** repeats a console hint when **`rc`** is **0** but that substring appears in captured autopilot **stderr**. Heartbeat **`err`** uses **`autopilot_daemon_stderr_tail_chars()`** with **`AUTOPILOT_DAEMON_STDERR_TAIL_MIN`** so tiny **`AUTOPILOT_LOG_TAIL_CHARS`** values cannot hide the probe (**`README.md`**, **`schema/AGENTS.md`**, **`scripts/wiki_paths.py`**).
 
 ## On "lossy compression" and scale critiques
 
@@ -107,6 +108,8 @@ Discussion on the gist also flags **very large indexes**: an AI-maintained **`in
 ## Consumer links (maintainers)
 
 Contributor-facing Markdown across **`schema/`**, **`README.md`**, **`proposed/`**, **`wiki/main.md`**, prompts, **`make help`**, and **`.github/`** points here so gist readers land on concrete tool names. **`tests/test_karpathy_bridge_docs.py`** asserts several of those paths and **`make wiki-log-tail`** stay wired. When you introduce a new top-level orientation doc, add the same pointer or extend that test in the same commit.
+
+**Pytest leg.** **`make wiki-test`** uses the first **`pytest`** on **`PATH`**. **`.github/workflows/ci.yml`** installs **`requirements.txt`** before that step. Never **`make wiki-test -q`**. Run **`pytest -q`** inside a **`.venv`** instead (**README.md** Pre-push and **Assistant preamble → repo mechanics** table, **`proposed/README.md`**, **`schema/wiki-quickstart.md`** **Pytest and CI**, **`schema/AGENTS.md`** githooks bullet, **`Makefile`** top comments, **`make help`**, **`tests/test_githooks_wiring.py`**, **`tests/test_pipeline_step_order.py`**, **`tests/test_karpathy_bridge_docs.py`**).
 
 **Workflow filing on GitHub.** Suspected CI, **`Makefile`**, autopilot, or **`.cursor/rules`** drift without a PR-ready patch belongs in **`.github/ISSUE_TEMPLATE/wiki-toolchain.md`**. **`.github/ISSUE_TEMPLATE/config.yml`** keeps blank GitHub issues enabled when that checklist does not fit.
 

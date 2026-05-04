@@ -24,6 +24,13 @@ def test_pre_push_hook_exists_and_executable() -> None:
 def test_readme_documents_preamble_table_and_githooks() -> None:
     text = README_ROOT.read_text(encoding="utf-8")
     assert "### Assistant preamble → repo mechanics" in text
+    start = text.index("### Assistant preamble → repo mechanics")
+    end = text.index("Compare a sibling downstream", start)
+    chunk = text[start:end]
+    assert "make wiki-test -q" in chunk
+    assert "schema/AGENTS.md" in chunk
+    assert "tests/test_karpathy_bridge_docs.py" in chunk
+    assert "tests/test_githooks_wiring.py" in chunk
     assert "scripts/githooks" in text
 
 
@@ -31,6 +38,12 @@ def test_githooks_readme_documents_modes() -> None:
     text = README_HOOKS.read_text(encoding="utf-8")
     assert "WIKI_PRE_PUSH" in text
     assert "core.hooksPath" in text
+    assert "make wiki-test -q" in text
+    assert "**Pytest leg**" in text
+    assert "proposed/README.md" in text
+    assert "schema/wiki-quickstart.md" in text
+    assert "schema/karpathy-llm-wiki-bridge.md" in text
+    assert "schema/AGENTS.md" in text
 
 
 def test_pre_push_skip_exits_zero() -> None:
@@ -49,5 +62,11 @@ def test_schema_agents_documents_optional_githooks_bullet() -> None:
     """Keep machine contract aligned with hook README and regression tests."""
     text = (ROOT / "schema" / "AGENTS.md").read_text(encoding="utf-8")
     assert "scripts/githooks/pre-push" in text
+    assert "make wiki-test -q" in text
     assert "WIKI_PRE_PUSH" in text
     assert "Assistant preamble" in text
+    assert "**Pytest leg**" in text
+    assert "proposed/README.md" in text
+    assert "tests/test_githooks_wiring.py" in text
+    assert "tests/test_pipeline_step_order.py" in text
+    assert "tests/test_karpathy_bridge_docs.py" in text

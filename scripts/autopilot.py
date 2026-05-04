@@ -15,7 +15,11 @@ from pathlib import Path
 from typing import Iterator
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from wiki_paths import autopilot_log_tail_chars, validate_wiki_argv_from_env
+from wiki_paths import (
+    AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE,
+    autopilot_log_tail_chars,
+    validate_wiki_argv_from_env,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 _RUNTIME_LOCK_PATH = ROOT / "ai" / "runtime" / ".autopilot.runtime.lock"
@@ -148,6 +152,19 @@ def _run_autopilot_pipeline(args: argparse.Namespace) -> None:
     out = ROOT / "ai" / "runtime" / "autopilot.status.json"
     out.write_text(json.dumps(status, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"ok={status['ok']} steps={len(status['steps'])}")
+    soft_rows = status.get("soft_failures") or []
+    if soft_rows and status.get("ok"):
+        names = ", ".join(str(row.get("script", "?")) for row in soft_rows)
+        tail = (
+            " Pipeline stopped early (--strict) after that soft-failure step."
+            if status.get("strict_stopped_early")
+            else ""
+        )
+        print(
+            f"autopilot: {AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE}: {names}.{tail} "
+            "Use --ci-parity or `make wiki-ci` for hard CI semantics.",
+            file=sys.stderr,
+        )
     if not status["ok"]:
         raise SystemExit(1)
 

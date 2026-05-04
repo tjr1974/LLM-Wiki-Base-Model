@@ -3,7 +3,8 @@
 
 Optional ``--ci-parity`` forwards to ``autopilot.py`` so typography, wiki lint, and outbound links match ``make wiki-ci`` hard failures.
 
-Heartbeat ``out`` / ``err`` tails call ``wiki_paths.autopilot_log_tail_chars()`` (``AUTOPILOT_LOG_TAIL_CHARS``, same defaults as ``autopilot.py``).
+Heartbeat ``out`` uses ``wiki_paths.autopilot_log_tail_chars()`` (``AUTOPILOT_LOG_TAIL_CHARS``). Heartbeat ``err`` uses ``wiki_paths.autopilot_daemon_stderr_tail_chars()`` (floors at ``AUTOPILOT_DAEMON_STDERR_TAIL_MIN``) so a tiny env cap cannot truncate away ``AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE``.
+When ``rc`` is ``0`` but the captured autopilot **stderr** contains ``wiki_paths.AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE``, this process prints a short **stderr** line pointing at the heartbeat file so console-only operators do not miss typography, ``lint_wiki``, or outbound-link soft failures.
 
 Long-running automation for the Karpathy gist *lint* habit with ingest queue prefix. See ``schema/karpathy-llm-wiki-bridge.md``.
 """
@@ -35,6 +36,7 @@ def _run_once(strict: bool, ci_parity: bool) -> dict:
     p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     failed = p.returncode != 0
     n = wiki_paths.autopilot_log_tail_chars(failed=failed)
+    n_err = wiki_paths.autopilot_daemon_stderr_tail_chars(failed=failed)
     out = p.stdout or ""
     err = p.stderr or ""
     return {
@@ -42,7 +44,7 @@ def _run_once(strict: bool, ci_parity: bool) -> dict:
         "ci_parity": ci_parity,
         "rc": p.returncode,
         "out": out[-n:],
-        "err": err[-n:],
+        "err": err[-n_err:],
     }
 
 
@@ -65,6 +67,14 @@ def main() -> None:
         HB.parent.mkdir(parents=True, exist_ok=True)
         HB.write_text(json.dumps({"cycle": i, **r}, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
         print(f"cycle={i} rc={r['rc']}")
+        err = r.get("err") or ""
+        if r["rc"] == 0 and wiki_paths.AUTOPILOT_SOFT_FAILURE_STDERR_NOTICE in err:
+            print(
+                "daemon: autopilot soft_failures while rc=0. "
+                f"Inspect stderr tail in {HB.as_posix()} (heartbeat err field). "
+                "Use --ci-parity for make wiki-ci hard exits.",
+                file=sys.stderr,
+            )
 
         if args.cycles and i >= args.cycles:
             break

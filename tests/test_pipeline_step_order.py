@@ -210,6 +210,22 @@ def test_makefile_help_wiki_check_echo_names_sources_category_gate() -> None:
     assert "lint_wiki" in hit and "validate_human_text" in hit
 
 
+def test_makefile_help_wiki_test_echo_warns_no_extra_make_goals() -> None:
+    """``make help`` should steer contributors away from ``make wiki-test -q`` (bogus make goal)."""
+    lines = (ROOT / "Makefile").read_text(encoding="utf-8").splitlines()
+    hits = [
+        ln
+        for ln in lines
+        if ln.strip().startswith("@echo")
+        and "wiki-test" in ln
+        and "make wiki-test -q" in ln
+        and "README Pre-push" in ln
+        and "tests/test_githooks_wiring.py" in ln
+        and "tests/test_pipeline_step_order.py" in ln
+    ]
+    assert hits, "expected @echo line warning about extra goals after make wiki-test"
+
+
 def test_makefile_help_wiki_hub_echo_mentions_gitignore_policy() -> None:
     """``make help`` should note hub-index output is gitignored on LLM Wiki Manager by default."""
     lines = (ROOT / "Makefile").read_text(encoding="utf-8").splitlines()
@@ -268,9 +284,17 @@ def test_makefile_help_echoes_githooks_hint() -> None:
 
 def test_makefile_header_comments_mention_issue_templates() -> None:
     """Top-of-file ``Makefile`` comments stay discoverable without running ``make help``."""
-    head = "\n".join((ROOT / "Makefile").read_text(encoding="utf-8").splitlines()[:8])
+    head = "\n".join((ROOT / "Makefile").read_text(encoding="utf-8").splitlines()[:9])
     assert "wiki-toolchain.md" in head
     assert "config.yml" in head
+    assert "make wiki-test -q" in head
+    assert "wiki-quickstart.md" in head
+    assert "karpathy-llm-wiki-bridge.md" in head
+    assert "proposed/README.md" in head
+    assert "schema/AGENTS.md" in head
+    assert "tests/test_githooks_wiring.py" in head
+    assert "tests/test_pipeline_step_order.py" in head
+    assert "tests/test_karpathy_bridge_docs.py" in head
 
 
 def test_makefile_help_echoes_wiki_toolchain_issue_template() -> None:

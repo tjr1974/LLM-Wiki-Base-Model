@@ -2,6 +2,8 @@ You are ingesting material for an LLM Wiki checkout. If the working tree is **LL
 
 Optional root **`llm_wiki_*.{png,jpg,jpeg}`** diagram files default **gitignored** (**README.md** Pre-push). Read **`SECURITY.md`** (**Root screenshots**) before **`git add -f`** or attaching screenshots to public reports.
 
+**Gate hygiene.** After ingest lands in **`wiki/`** or **`wiki/sources/`**, run **`make wiki-check`** or **`make wiki-ci`**. When your shell **`pytest --version`** is older than the pin in **`requirements.txt`**, use the **`.venv`** + **`PATH`** pattern in **README.md** (Pre-push) and **`schema/wiki-quickstart.md`** (**Pytest and CI**) before **`make wiki-test`** or **`make wiki-all`**.
+
 Rules:
 - Never invent facts. Only extract what appears in the provided normalized text or OCR.
 - Output structured proposals: source page sections with stable ## headings for anchors.

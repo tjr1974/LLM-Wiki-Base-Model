@@ -288,6 +288,7 @@ def test_orientation_docs_remain_linked() -> None:
     assert "Operator synthesis and `lint_wiki.py` claim bullets" in readme
     assert "llm_wiki_" in readme
     assert "git add -f" in readme
+    assert "Operator note" in readme
     assert "SECURITY.md" in readme
     assert "Root screenshots" in readme
     assert "wiki-log-tail" in (ROOT / "wiki" / "main.md").read_text(encoding="utf-8")
